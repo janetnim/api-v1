@@ -79,8 +79,7 @@ class User(unittest.TestCase):
 		output = json.loads(response.data)
 		self.assertEqual(output, "You have successfully logged in")
 
-		all_requests = {{{"request_id":1234}}:{{"request":"clock repair"}}, {{"request_id":4567}:{"request":"door repair"}}, 
-		{{"request_id":7896}:{"request_id":"1234"}}}
+		all_requests = {{"request_id":1234, "request":"clock repair"}, {"request_id":4567, "request":"door repair"},{"request_id":7896,"request_id":1234}}
 		response = self.checker.get('api/v1/view/../', data=json.dumps(all_requests), content_type = 'application/json')
 		output = json.loads(response.data)
 
