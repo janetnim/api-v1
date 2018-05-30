@@ -29,6 +29,7 @@ def makerequest():
     if request.json:
 		make_request = User().make_request(request.json['request_id'], request.json['request'], request.json['department'])
 		return jsonify({'Requests made': make_request})
+		
 	make_request = User().make_request(request.form.get('request_id'), request.form.get('request'), request.form.get('department'))
 	return jsonify({'Requests made': make_request})
 
