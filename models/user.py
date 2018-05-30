@@ -1,6 +1,6 @@
 from admin import  Admin
 
-Class User(object):
+class User(object):
 	
 	user = [{'username': 'janet', 'email':'janetnim401@gmail.com', 'password': 66555}, {'username': 'kate', 'email': 'kate@gmail.com',
 	 'password': 66555}, {'username':'admin', 'email':'admin@gmail.com', password: 121212}]
