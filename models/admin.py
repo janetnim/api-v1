@@ -19,24 +19,24 @@ class Admin(object):
         self.results = {}
 
     def received_request(self, request_id, request, department):
-        '''checks each request sent'''
+        #checks each request sent
         request1 = [
             request1 for request1 in Admin().received_requests if request1["request_id"] == request_id]
-        for request in request1:
-            return "Request is present"
-        if len(request1) == 0:
-            return "No request present"
+        if request1:
+        	return"Request is already present"
+
+        self.result["request_id"] = request_id
+        self.result["request"] = request
+        self.result["department"] = department
+        Admin().received_requests.append(self.result)
+        return "Received a new request"
 
     def view_all_requests(self):
     	#fetchs all requests sent to admin
-    	if len(Admin().received_requests) == 0:
-    		return "No received requests available"
-    	return "Requests available"
+        return Admin().received_requests
 
-    def resolve_requests(self, request_id, request, department):
+    def resolve_requests(self, request_id):
     	#fetches request info for the admin to resolve
-    	if request_id == "" or request == "" or department == "":
-    		return "No request present"
     	request2 = [
             request1 for request1 in Admin().received_requests if request1["request_id"] == request_id]
     	if not request2:
