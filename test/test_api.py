@@ -9,39 +9,39 @@ class User(unittest.TestCase):
 
 
 		details = {"username":"janet", "password":"12345"}
-		response = checker.post('api/v1/login', data=json.dumps(details), content_type = 'application/json')
+		response = checker.post('/api/v1/login', data=json.dumps(details), content_type = 'application/json')
 		self.assertEqual(response.status_code, 200)
 
 
 	def test_user_sign_up(self):
 		# testing user sign up entries -post
 		details = {"email":"janetnim401@gmail.com", "username":"janet", "password":"12345"}
-		response = self.checker.post('api/v1/signup', data=json.dumps(details), content_type = 'application/json')
+		response = self.checker.post('/api/v1/signup', data=json.dumps(details), content_type = 'application/json')
 		self.assertEqual(response.status_code, 200)
 		output = json.loads(response.data)
 		self.assertEqual(output, "You have successfully created an account")
 
 		details_1 = {"email":" ", "username":" ", "password": " "}
-		response_1 = self.checker.post('api/v1/signup', data=json.dumps(details_1), content_type = 'application/json')
+		response_1 = self.checker.post('/api/v1/signup', data=json.dumps(details_1), content_type = 'application/json')
 		self.assertEqual(response_1.status_code, 200)
 		output_1 = json.loads(response_1.data)
 		self.assertEqual(response_1, 200)
 		self.assertEqual(output_1, "You have blank entries, please fill all details")
 
 		details_2 = {"username":678887, "email": "janetnim401@gmail.com", "password": 12345}
-		response_2 = self.checker.post('api/v1/login', data=json.dumps(details_2), content_type = 'application/json')
+		response_2 = self.checker.post('/api/v1/login', data=json.dumps(details_2), content_type = 'application/json')
 		output_2 = json.loads(response_2.data)
 		self.assertEqual(response_2, 200)
 		self.assertEqual(output_2, "Please use data in string format for username")
 
 		details_3 = {"username":"janet", "email": 98745, "password":12345}
-		response_ = self.checker.post('api/v1/login', data=json.dumps(details_3), content_type = 'application/json')
+		response_ = self.checker.post('/api/v1/login', data=json.dumps(details_3), content_type = 'application/json')
 		output_3 = json.loads(response_3.data)
 		self.assertEqual(response_3, 200)
 		self.assertEqual(output_3, "Please use data in string format for email")
 
 		details_4 = {"username": "janet", "email": "janetnim401@gmail.com", "password": "schrodinger"}
-		response_4 = self.checker.post('api/v1/login', data=json.dumps(details_4), content_type = 'application/json')
+		response_4 = self.checker.post('/api/v1/login', data=json.dumps(details_4), content_type = 'application/json')
 		output_4 = json.loads(response_4.data)
 		self.assertEqual(response_4, 200)
 		self.assertEqual(output_4, "Please use data in int format for password")
@@ -49,25 +49,25 @@ class User(unittest.TestCase):
 	def test_user_log_in(self):
 		# testing user log in entries -post
 		details = {"username":"janet", "password": 12345}
-		response = self.checker.post('api/v1/login', data=json.dumps(details), content_type = 'application/json')
+		response = self.checker.post('/api/v1/login', data=json.dumps(details), content_type = 'application/json')
 		self.assertEqual(response.status_code, 200)
 		output = json.loads(response.data)
 		self.assertEqual(output, "You have successfully logged in")
 
 		details_1 = {"username":" ", "password":" "}
-		response_1 = self.checker.post('api/v1/login', data=json.dumps(details_1), content_type = 'application/json')
+		response_1 = self.checker.post('/api/v1/login', data=json.dumps(details_1), content_type = 'application/json')
 		output_1 = json.loads(response_1.data)
 		self.assertEqual(response_1, 200)
 		self.assertEqual(output_1, "Can not log in! Please enter all details")
 
 		details_2 = {"username":5252, "password": 12345}
-		response_2 = self.checker.post('api/v1/login', data=json.dumps(details_2), content_type = 'application/json')
+		response_2 = self.checker.post('/api/v1/login', data=json.dumps(details_2), content_type = 'application/json')
 		output_2 = json.loads(response_2.data)
 		self.assertEqual(response_2, 200)
 		self.assertEqual(output_2, "Please use data in string format for username")
 
 		details_3 = {"username":"janet", "password":"12345"}
-		response_3 = self.checker.post('api/v1/login', data=json.dumps(details_3), content_type = 'application/json')
+		response_3 = self.checker.post('/api/v1/login', data=json.dumps(details_3), content_type = 'application/json')
 		output_3 = json.loads(response_3.data)
 		self.assertEqual(response_3, 200)
 		self.assertEqual(output_3, "Please use data in integer format for password")
@@ -75,29 +75,29 @@ class User(unittest.TestCase):
 	def test_user_make_request(self):
 		# testing user make a request -post
 		request_data = {"request_id": "1234", "request": "bulb repair", "department": "HR"}
-		response = self.checker.post("api/v1/request", data=json.dumps(request_data), content_type= 'application/json')
+		response = self.checker.post("/api/v1/request", data=json.dumps(request_data), content_type= 'application/json')
 		self.assertEqual(response.status_code, 200)
 
 		details = {"username":"janet", "password":"12345"}
-		response = self.checker.post('api/v1/login', data=json.dumps(details), content_type = 'application/json')
+		response = self.checker.post('/api/v1/login', data=json.dumps(details), content_type = 'application/json')
 
 		self.assertEqual(response.status_code, 200)
 		output = json.loads(response.data)
 		self.assertEqual(output, "You have successfully logged in")
 
 		make_request = json.dumps(request_data)
-		response = self.checker.post("api/v1/makerequest", data=make_request, content_type= 'application/json')
+		response = self.checker.post("/api/v1/makerequest", data=make_request, content_type= 'application/json')
 		self.assertEqual(response.status_code, 200)
 
 
 	def test_user_view_a_request(self):
 		# testing user viewing each request -get
 		request_data = {{"request_id":1234} : {"request":"clock repair"}}
-		response = self.checker.post('api/v1/request/', data=json.dumps(request), content_type = 'application/json')
+		response = self.checker.post('/api/v1/request/', data=json.dumps(request), content_type = 'application/json')
 		output= json.loads(response.data)
 
 		details = {"username":"janet", "password":"12345"}
-		response = self.checker.post('api/v1/login', data=json.dumps(details), content_type = 'application/json')
+		response = self.checker.post('/api/v1/login', data=json.dumps(details), content_type = 'application/json')
 		self.assertEqual(response.status_code, 200)
 		output = json.loads(response.data)
 		self.assertEqual(output, "You have successfully logged in")
