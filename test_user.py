@@ -36,11 +36,11 @@ class TestModels(unittest.TestCase):
     	self.assertEqual(results, "Your account does not exist, please sign sign_up")
 
     def test_user_make_an_empty_request(self):
-        results = User().make_request("", "bulb repair", "hr")
+        results = User().make_request(2323, "", "")
         self.assertEqual(results, "Error! Please fill all the details")
 
     def test_user_make_request_with_existing_id(self):
-        results = User().make_request(1234, "bulb repair", "hr")
+        results = User().make_request(5478, "bulb repair", "hr")
         self.assertEqual(results, "Invalid request id")
 
     def test_user_successful_make_request(self):
@@ -52,7 +52,7 @@ class TestModels(unittest.TestCase):
         self.assertEqual(results, "Request not present")
 
     def test_user_view_existing_request(self):
-        results = User().view_a_request(1234)
+        results = User().view_a_request(5478)
         self.assertEqual(results, "Request is present")
 
     def test_user_views_all_requests(self):
@@ -64,7 +64,7 @@ class TestModels(unittest.TestCase):
         self.assertEqual(results, "Error! The request does not exist")
 
     def test_user_modify_existing_request(self):
-        results = User().modify_request(1234, 'vehicle maintenance')
+        results = User().modify_request(5478, 'vehicle maintenance')
         self.assertEqual(results, "Changes successfully made")
 
     def test_user_delete_non_existing_request(self):
