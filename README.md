@@ -1,13 +1,13 @@
 ﻿[![Build Status](https://travis-ci.org/janetnim/api-v1.svg?branch=ft-api-test)](https://travis-ci.org/janetnim/api-v1)
 [![Coverage Status](https://coveralls.io/repos/github/janetnim/api-v1/badge.svg?branch=ft-api-test)](https://coveralls.io/github/janetnim/api-v1?branch=ft-api-test) 
-# api-v1
+Maintenance Tracker Api V1 //ALSO A HEADING SORTA BIGGER THAN THE REST
 This is the API version 1 repository for the maintenance tracker application.
 
-Description
-For challenge 2 of boot camp week 1, we are required to make a test for the api of which I am to use to test my API endpoints. I created a new repository for this challenge and cloned it to my desktop from which I created ft-api-test branch that I put my test in then pulled a request and merged it with the develop branch. We were also required to create a medium blog post about three of our team members and an LFA we interacted with. We are also required to make frequent communication with our LFAs and team members.
+Description //HEADING  BLUE COLOR
+In challenge 2, we are required to first create a test for the API endpoints. The tests should first fail since no apis have been provided for the test. The four major tests for the endpoints are that a logged in user should be able to make a request, fetch a request, fetch all requests made by the user, modify  and delete a request. After writing the tests, you can now write the apis for the endpoints and check that they meet the tests written.
 
-Tasks to be done
-The tasks to be completed for the event are:
+Tasks to be done //A SMALL HEADING
+The tasks to be completed for the event are:https://www.pivotaltracker.com/n/projects/2173438
 1.Write a unit test code for the api endpoints
 2.Create endpoints for that satisfy the test created
 3.Create a new repo for your apis and test
@@ -17,13 +17,24 @@ The tasks to be completed for the event are:
 7.Test your code on postman, travis CI,
 8.Update your readme and add badge
 
-Requirements
-Flask
-Pivotal tracker
-Postman
-Travic CI
+Development //II NI HEADING...DO HEADING 1 BLUE COLOR
+Create a api-v1 repository on github and clone it with the command:
+git clone https://github.com/janetnim/api-v1.git
 
-References
+In your terminal create a virtual environment and activate it:
+virtualenv venv
+. virtual/bin/activate
+
+To intall dependancies
+pip install -r requirements.txt
+pip install flask
+
+then checkout to develop branch and navigate to the api and test files in your local repository
+git checkout develop
+
+
+Links HEADING  BLUE COLOR
 Github: https://github.com/janetnim/api-v1.git
-Medium post: 
-Pivotal tracker stories: 
+Medium post: https://medium.com/@janetnim401/team-dynamism-all-the-way-37b49c965a4a
+Pivotal tracker stories: https://www.pivotaltracker.com/n/projects/2173438
+Pull request: https://github.com/janetnim/api-v1/pull/1 for api test
