@@ -27,9 +27,8 @@ class User(object):
             return "Enter a string value for name and email and integer value for password"
 
         '''checks if the user alreay exists'''
-        user1 = [user1 for user1 in User().user if user1["username"] == username
-                 and user1["email"] == email and user1["password"] == password]
-        if user1:
+        user2 = [user1 for user1 in User().user if user1["username"] == username]
+        if user2:
             return "user already exists"
 
         self.result[username] = username
