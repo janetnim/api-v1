@@ -1,5 +1,3 @@
-from .admin import  Admin
-
 class User(object):
 
     user = [{'username': 'janet', 'email': 'janetnim401@gmail.com', 'password': 66555}, {'username': 'kate', 'email': 'kate@gmail.com','password': 999454}, {'username': 'admin', 'email': 'admin@gmail.com', "password": 121212}]
@@ -37,7 +35,7 @@ class User(object):
         self.result[username] = username
         self.result[email] = email
         self.result[password] = password
-        User.user.append(self.result)
+        User().user.append(self.result)
         return "You have successfully been registered!"
 
     def login(self, username, password):
@@ -71,7 +69,6 @@ class User(object):
         self.result["request_id"] = request_id
         self.result["request"] = request
         self.result["department"] = department
-        Admin().received_requests.append(self.result)
         User().request_data.append(self.result)
         return "Successfully made a request"
 
@@ -104,5 +101,4 @@ class User(object):
         if not request1:
             return "Error! The request does not exist"
         User().request_data.remove(request1[0])
-        Admin().received_requests.remove(request1[0])
         return "Request successfully deleted"
