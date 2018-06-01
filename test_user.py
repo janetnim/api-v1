@@ -30,6 +30,10 @@ class TestModels(unittest.TestCase):
     def test_successful_log_in(self):
         results = User().login("janet", 66555)
         self.assertEqual(results, "You have successfully logged_in")
+        
+    def test_log_in_unexisting_account(self):
+    	results = User().login("Kendall", 4010)
+    	self.assertEqual(results, "Your account does not exist, please sign sign_up")
 
     def test_user_make_an_empty_request(self):
         results = User().make_request("", "bulb repair", "hr")
