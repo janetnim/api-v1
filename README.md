@@ -1,4 +1,6 @@
-﻿# api-v1
+﻿[![Build Status](https://travis-ci.org/janetnim/api-v1.svg?branch=ft-api-test)](https://travis-ci.org/janetnim/api-v1)
+
+# api-v1
 This is the API version 1 repository for the maintenance tracker application.
 
 Description
