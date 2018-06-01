@@ -26,7 +26,7 @@ class User(object):
         if not isinstance(username, str)or not isinstance(email, str) or not isinstance(password, int):
             return "Enter a string value for name and email and integer value for password"
 
-        '''checks if the user alreay exists'''
+        '''checks if the user already exists'''
         user2 = [user1 for user1 in User().user if user1["username"] == username]
         if user2:
             return "user already exists"
