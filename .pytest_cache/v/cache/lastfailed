@@ -9,10 +9,5 @@
   "test/test_api.py::User::test_user_make_request": true,
   "test/test_api.py::User::test_user_sign_up": true,
   "test/test_api.py::User::test_user_view_a_request": true,
-  "test/test_api.py::User::test_user_view_all_requests": true,
-  "test_user.py::TestModels::test_if_user_already_exists": true,
-  "test_user.py::TestModels::test_log_in_unexisting_account": true,
-  "test_user.py::TestModels::test_successful_log_in": true,
-  "test_user.py::TestModels::test_user_make_request_with_existing_id": true,
-  "test_user.py::TestModels::test_user_successfully_signed_up": true
+  "test/test_api.py::User::test_user_view_all_requests": true
 }
