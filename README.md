@@ -47,3 +47,4 @@ git checkout develop
 [Medium post](https://medium.com/@janetnim401/team-dynamism-all-the-way-37b49c965a4a)
 [Pivotal tracker stories](https://www.pivotaltracker.com/n/projects/2173438)
 [Pull request](https://github.com/janetnim/api-v1/pull/1)
+
