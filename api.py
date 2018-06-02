@@ -70,14 +70,7 @@ def receive_request():
     requests = Admin().received_request()
     return jsonify({'message': requests})
 
-
-# @app.route('/api/v1/resolve/<int:request_id>', methods=['GET'])
-# def resolve_request(request_id):
-#     '''api endpoint for user viewing ALL requests'''
-#     resolve = Admin().resolve_requests(request_id)
-#     return jsonify({"message": resolve})
     
-
 
 if __name__ == '__main__':
     app.run(debug=True)
