@@ -2,7 +2,5 @@ venv/
 __pycache__/
 .pytest_cache/
 .coverage
-models/__pycache__/__init__.cpython-36.pyc
-models/__pycache__/admin.cpython-36.pyc
-models/__pycache__/user.cpython-36.pyc
 __pycache__
+*.pyc
