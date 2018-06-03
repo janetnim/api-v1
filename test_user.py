@@ -55,9 +55,9 @@ class TestModels(unittest.TestCase):
         results = User().view_a_request(5478)
         self.assertEqual(results, "Request is present")
 
-    def test_user_views_all_requests(self):
-    	results = User().view_all_requests()
-    	self.assertIsInstance(results, list, msg='Incorrect output type')
+    # def test_user_views_all_requests(self):
+    # 	results = User().view_all_requests()
+    # 	self.assertIsInstance(results, list, msg='Incorrect output type')
 
     def test_user_modify_non_existing_request(self):
         results = User().delete_request(4000)
