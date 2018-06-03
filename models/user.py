@@ -79,8 +79,10 @@ class User(object):
             return "Request not present"
         return "Request is present"
 
-    # def view_all_requests(self):
-    #     return User().request_data
+    def view_all_requests(self):
+        res = []
+        res.append(User().request_data)
+        return res
 
     def modify_request(self, request_id, new_request):
         '''checks for existence of a request by its id before modifying it'''

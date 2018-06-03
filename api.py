@@ -44,11 +44,11 @@ def view_1(request_id):
     return jsonify({'message': result})
 
 
-# @app.route('/api/v1/view', methods=['GET'])
-# def view():
-#     '''api endpoint for user viewing ALL requests'''
-#     requests = User().view_all_requests()
-#     return jsonify({"message": requests})
+@app.route('/api/v1/view', methods=['GET'])
+def view():
+    '''api endpoint for user viewing ALL requests'''
+    requests = User().view_all_requests()
+    return jsonify({"message": requests})
 
 
 @app.route('/api/v1/modify/<int:request_id>', methods=['PUT'])
