@@ -6,6 +6,9 @@ from models.user import User
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def test():
+    return {'working':'yes'}
 
 @app.route('/api/v1/signup', methods=['POST'])
 def signup():
