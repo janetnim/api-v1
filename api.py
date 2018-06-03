@@ -37,11 +37,11 @@ def makerequest():
     return jsonify({'message': make_request})
 
 
-# @app.route('/api/v1/view/<int:request_id>', methods=['GET'])
-# def view_1(request_id):
-#     '''api endpoint for user to view a request'''
-#     result = User().view_a_request(request_id)
-#     return jsonify({'message': result})
+@app.route('/api/v1/view/<int:request_id>', methods=['GET'])
+def view_1(request_id):
+    '''api endpoint for user to view a request'''
+    result = User().view_a_request(request_id)
+    return jsonify({'message': result})
 
 
 @app.route('/api/v1/view', methods=['GET'])

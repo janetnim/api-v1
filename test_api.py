@@ -39,11 +39,11 @@ class TestApis(unittest.TestCase):
             '/api/v1/view/1234', data=json.dumps(request_data), content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
-    # def test_user_view_all_requests(self):
-    #     # testing user view all his requests -get
-    #     response = self.checker.get(
-    #         '/api/v1/view', content_type='application/json')
-    #     self.assertEqual(response.status_code, 200)
+    def test_user_view_all_requests(self):
+        # testing user view all his requests -get
+        response = self.checker.get(
+            '/api/v1/view', content_type='application/json')
+        self.assertEqual(response.status_code, 200)
 
     def test_modify_request(self):
         '''testing user modify a request -update'''
