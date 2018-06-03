@@ -77,4 +77,4 @@ def receive_request():
 
 if __name__ == "__main__":
     PORT = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='', port=PORT)
+    app.run(debug=True, host='127.0.0.1', port=PORT)
