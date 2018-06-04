@@ -25,7 +25,7 @@ def login():
         post_log['username'], post_log['password'])
     return jsonify({'message': user_log_in}), 201
 
-@app.route('/api/v1/makerequest', methods=['POST'])
+@app.route('/api/v1/request', methods=['POST'])
 def makerequest():
     '''api endpoint for user to make a request'''
     post_req = request.get_json(force=True)
@@ -33,19 +33,19 @@ def makerequest():
         post_req['request_id'], post_req['request'], post_req['department'])
     return jsonify({'message': make_request})
 
-@app.route('/api/v1/view/<int:request_id>', methods=['GET'])
+@app.route('/api/v1/request/<int:request_id>', methods=['GET'])
 def view_1(request_id):
     '''api endpoint for user to view a request'''
     result = User().view_a_request(request_id)
     return jsonify({'message': result})
 
-@app.route('/api/v1/view', methods=['GET'])
+@app.route('/api/v1/request', methods=['GET'])
 def view():
     '''api endpoint for user viewing ALL requests'''
     requests = User().view_all_requests()
     return jsonify({"message": requests})
 
-@app.route('/api/v1/modify/<int:request_id>', methods=['PUT'])
+@app.route('/api/v1/request/<int:request_id>', methods=['PUT'])
 def modify(request_id):
     '''api endpoint for user to modify a request'''
     post_mod = request.get_json(force=True)
@@ -53,7 +53,7 @@ def modify(request_id):
         post_mod['request_id'], post_mod['new request'])
     return jsonify({'message': modify})
 
-@app.route('/api/v1/delete/<int:request_id>', methods=['DELETE'])
+@app.route('/api/v1/request/<int:request_id>', methods=['DELETE'])
 def delete_a_request(request_id):
     '''api endpoint for user to delete a request'''
     delete = User().delete_request(request_id)
