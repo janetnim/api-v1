@@ -7,10 +7,10 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def test():
-    return {'working':'yes'}
+    return jsonify({'working':'yes'}), 200
 
 @app.route('/api/v1/signup', methods=['POST'])
-def signup():
+def signup():{'working':'yes'}
     '''api endpoint for the user sign up'''
     post_new = request.get_json(force=True)
     new_user = User().sign_up(
