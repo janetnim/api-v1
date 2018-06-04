@@ -31,9 +31,9 @@ class User(object):
         if user2:
             return "user already exists"
 
-        self.result[username] = username
-        self.result[email] = email
-        self.result[password] = password
+        self.result["username"] = username
+        self.result["email"] = email
+        self.result["password"] = password
         User().user.append(self.result)
         return "You have successfully been registered!"
 
