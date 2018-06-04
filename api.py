@@ -10,7 +10,7 @@ def test():
     return jsonify({'working':'yes'}), 200
 
 @app.route('/api/v1/signup', methods=['POST'])
-def signup():{'working':'yes'}
+def signup():
     '''api endpoint for the user sign up'''
     post_new = request.get_json(force=True)
     new_user = User().sign_up(
