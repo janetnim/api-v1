@@ -77,7 +77,7 @@ class User(object):
         ).request_data if request1["request_id"] == request_id]
         if not request1:
             return "Request not present"
-        return "Request is present"
+        return request1
 
     def view_all_requests(self):
         res = []
