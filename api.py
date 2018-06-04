@@ -1,4 +1,3 @@
-import os
 from flask import Flask, jsonify, request
 from models.admin import Admin
 from models.user import User
@@ -18,7 +17,6 @@ def signup():
         post_new['username'], post_new['email'], post_new['password'])
     return jsonify({'message': new_user}), 201
 
-
 @app.route('/api/v1/login', methods=['POST'])
 def login():
     '''api endpoint for user log in'''
@@ -26,7 +24,6 @@ def login():
     user_log_in = User().login(
         post_log['username'], post_log['password'])
     return jsonify({'message': user_log_in}), 201
-
 
 @app.route('/api/v1/makerequest', methods=['POST'])
 def makerequest():
@@ -36,20 +33,17 @@ def makerequest():
         post_req['request_id'], post_req['request'], post_req['department'])
     return jsonify({'message': make_request})
 
-
 @app.route('/api/v1/view/<int:request_id>', methods=['GET'])
 def view_1(request_id):
     '''api endpoint for user to view a request'''
     result = User().view_a_request(request_id)
     return jsonify({'message': result})
 
-
 @app.route('/api/v1/view', methods=['GET'])
 def view():
     '''api endpoint for user viewing ALL requests'''
     requests = User().view_all_requests()
     return jsonify({"message": requests})
-
 
 @app.route('/api/v1/modify/<int:request_id>', methods=['PUT'])
 def modify(request_id):
@@ -59,13 +53,11 @@ def modify(request_id):
         post_mod['request_id'], post_mod['new request'])
     return jsonify({'message': modify})
 
-
 @app.route('/api/v1/delete/<int:request_id>', methods=['DELETE'])
 def delete_a_request(request_id):
     '''api endpoint for user to delete a request'''
     delete = User().delete_request(request_id)
     return jsonify({'message': delete})
-
 
 @app.route('/api/v1/adminrequest', methods=['GET'])
 def receive_request():
@@ -77,5 +69,4 @@ def receive_request():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    # PORT = int(os.environ.get('PORT', 5000))
-    # app.run(debug=True, host='127.0.0.1', port=5000)
+    
