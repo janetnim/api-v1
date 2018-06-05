@@ -40,7 +40,7 @@ class TestModels(unittest.TestCase):
         self.assertEqual(results, "Error! Please fill all the details")
 
     def test_user_make_request_with_existing_id(self):
-        results = User().make_request(5478, "bulb repair", "hr")
+        results = User().make_request(5478, "bulzb repair", "hr")
         self.assertEqual(results, "Invalid request id")
 
     def test_user_successful_make_request(self):
@@ -53,7 +53,7 @@ class TestModels(unittest.TestCase):
 
     def test_user_view_existing_request(self):
         results = User().view_a_request(5478)
-        self.assertEqual(results, User().view_a_request(5478))
+        self.assertEqual(results, "Request is present")
 
     def test_user_views_all_requests(self):
     	results = User().view_all_requests()
