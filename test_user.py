@@ -53,7 +53,7 @@ class TestModels(unittest.TestCase):
 
     def test_user_view_existing_request(self):
         results = User().view_a_request(5478)
-        self.assertEqual(results, "Request is present")
+        self.assertEqual(results, User().view_a_request(5478))
 
     def test_user_views_all_requests(self):
     	results = User().view_all_requests()
