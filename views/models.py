@@ -1,14 +1,3 @@
-from flask import Flask, request, jsonify
-from flask_restful import Resource, Api
-import psycopg2
-from config import config
-
-app = Flask(__name__)
-api = Api(app)
-
-conn = psycopg2.connect(dbname='maintenance' user='janetnim' host='localhost' password='icarly401')
-cur = conn.cursor()
-
 class Authentication(Resource):
 	cur.execute("CREATE TABLE IF NOT EXISTS users (personal_id serial PRIMARY KEY, username varchar unique, email varchar unique, password varchar unique)")
 	def post_signup(self, username="", email="", password=""):
