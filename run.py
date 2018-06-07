@@ -1,23 +1,28 @@
 from flask import Flask, request, jsonify
-from flask_restful import Resource, Api
+from flask_restful import  Api
 from config import config
-import psycopg2
-from views.models import User
+from views.models import User_login, User_SignUp
 from views.models import Request
-from test.test_api import TestModels
-# import manage.py
+# from test.test_api import TestModels
+
 
 app = Flask(__name__)
 api = Api(app)
 
-conn = psycopg2.connect(dbname='maintenance' user='janetnim' host='localhost' password='icarly401')
-cur = conn.cursor()
 
-api.add_resource(Authenication, 'api/v2/auth/')
-api.add_resource(User, 'api/v2/users/requests')
-api.add_resource(User, 'api/v2/users/requests/<int:request_id>')
-api.add_resource(Admin, 'api/v2/requests')
-api.add_resource(Admin, 'api/v2/requests/<int:request_id>')
+api.add_resource(User_SignUp, '/auth/signup', methods=['POST'])
+api.add_resource(User_login, '/auth/login', methods=['POST'])
+# api.add_resource(Request, '/users/requests', methods=['POST'])
+# api.add_resource(Request, '/users/requests', methods=['GET'])
+# api.add_resource(Request, '/users/requests/<int:request_id>', methods=['GET'])
+# api.add_resource(Request, '/users/requests/<int:request_id>', methods=['PUT'])
+# api.add_resource(Request, '/users/requests/<int:request_id>', methods=['DELETE'])
+# api.add_resource(Request, '/requests', methods=['GET'])
+# api.add_resource(Request, 'requests/<int:request_id>/approve', methods=['PUT'])
+# api.add_resource(Request, 'requests/<int:request_id>/disapprove', methods=['PUT'])
+# api.add_resource(Request, 'requests/<int:request_id>/resolve', methods=['PUT'])
+# api.add_resource(Request, 'requests/<int:request_id>/delete', methods=['DELETE'])
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
