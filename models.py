@@ -49,7 +49,7 @@ class User_login(Resource):
 		username = args['username']
 		password = args['password']
 
-		cur.execute("SELECT * FROM users WHERE username = %s AND password = %s ", (username,password))
+		cur.execute("SELECT * FROM users WHERE username = %s AND password = %s;", (username,password))
 
 
 		user = User_login().get_one_user(username)
@@ -116,8 +116,8 @@ class ModifyRequest(Resource):
 		res = cur.fetchone()
 		if res is None or len(res) == 0:
 			return jsonify({"message": "Request does not exist"})
-		cur.execute("UPDATE requests SET request={} WHERE request_id={} and personal_id={}".format(request, request_id, personal_id));
-		cur.execute("SELECT * FROM requests WHERE request_id={}".format(request_id))
+		cur.execute("UPDATE requests SET request = %s WHERE request_id = %s and personal_id = %s", (request, request_id, personal_id));
+		cur.execute("SELECT * FROM requests WHERE request_id = %s", (request_id,))
 		conn.commit()
 		items= cur.fetchone()
 		return jsonify({"items":items})
