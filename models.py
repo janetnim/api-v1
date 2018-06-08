@@ -51,7 +51,6 @@ class User_login(Resource):
 
 		cur.execute("SELECT * FROM users WHERE username = %s AND password = %s;", (username,password))
 
-
 		user = User_login().get_one_user(username)
 		if user is None:
 			return jsonify({"message":"user not found"}), 404
@@ -89,7 +88,7 @@ class MakeRequest(Resource):
 		if request=="" or department=="" or status=="" or personal_id == "":
 			return jsonify({"message":"Please fill all details"})
 		cur.execute("INSERT INTO requests (request, department, status, personal_id)VALUES('{}','{}','Pending', {})".format(request, department, personal_id))
-		cur.execute("SELECT * FROM requests")
+		cur.execute("SELECT * FROM requests;")
 		res = cur.fetchall()
 		conn.commit()
 		return jsonify({"res":res})
@@ -154,7 +153,8 @@ class AdminGetRequest(Resource):
 		return jsonify({"res":res})
 
 
-class ApproveRequest(Resource):		
+class ApproveRequest(Resource):
+	@jwt_required		
 	def put(self, request_id):
 		cur.execute("SELECT request_id FROM requests WHERE request_id={}".format(request_id))
 		res=cur.fetchone()
@@ -168,6 +168,7 @@ class ApproveRequest(Resource):
 
 
 class DisapproveRequest(Resource):
+	@jwt_required
 	def put(self, request_id):
 		cur.execute("SELECT request_id FROM requests WHERE request_id={}".format(request_id))
 		res=cur.fetchone()
@@ -181,10 +182,11 @@ class DisapproveRequest(Resource):
 
 
 class AdminResolveRequest(Resource):
+	@jwt_required
 	def put(self, request_id):
 		cur.execute("SELECT request_id FROM requests WHERE request_id={}".format(request_id))
 		res=cur.fetchone()
-		if res is None:
+		if res is None or len(res)==0:
 			return jsonify({"message":"Request does not exist"})
 		cur.execute("UPDATE requests SET status='Complete' WHERE request_id={}".format(request_id))
 		cur.execute("SELECT * FROM requests WHERE request_id={}".format(request_id))
@@ -194,6 +196,7 @@ class AdminResolveRequest(Resource):
 
 
 class AdminDeleteRequest(Resource):
+	@jwt_required
 	def delete(self, request_id):
 		cur.execute("SELECT * FROM requests WHERE request_id={}".format(request_id))
 		res = cur.fetchone()
