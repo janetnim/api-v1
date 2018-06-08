@@ -73,6 +73,7 @@ class User_login(Resource):
 
 
 class MakeRequest(Resource):
+	@jwt_required
 	def post(self):
 		parser = reqparse.RequestParser()
 		parser.add_argument('request', type=str, help='invalid request')
@@ -96,6 +97,7 @@ class MakeRequest(Resource):
 
 
 class RequestView(Resource):
+	@jwt_required
 	def get(self, request_id, personal_id):
 		cur.execute("SELECT * FROM requests WHERE request_id={} and personal_id={}".format(request_id, personal_id))
 		res = cur.fetchone()
@@ -105,6 +107,7 @@ class RequestView(Resource):
 
 
 class ModifyRequest(Resource):
+	@jwt_required
 	def put(self, request_id, personal_id):
 		parser = reqparse.RequestParser()
 		parser.add_argument('request', type=str, help='invalid request')
@@ -124,6 +127,7 @@ class ModifyRequest(Resource):
 
 
 class DeleteRequest(Resource):
+	@jwt_required
 	def delete(self, request_id, personal_id):
 		cur.execute("SELECT * FROM requests WHERE request_id={} and personal_id={}".format(request_id, personal_id))
 		res = cur.fetchone()
@@ -136,6 +140,7 @@ class DeleteRequest(Resource):
 
 
 class ViewAllRequest(Resource):
+	@jwt_required
 	def get(self, personal_id):
 		cur.execute("SELECT * FROM requests WHERE personal_id={}".format(personal_id))
 		res =cur.fetchall()
@@ -154,7 +159,8 @@ class AdminGetRequest(Resource):
 		return jsonify({"res":res})
 
 
-class ApproveRequest(Resource):		
+class ApproveRequest(Resource):
+	@jwt_required		
 	def put(self, request_id):
 		cur.execute("SELECT request_id FROM requests WHERE request_id={}".format(request_id))
 		res=cur.fetchone()
@@ -168,6 +174,7 @@ class ApproveRequest(Resource):
 
 
 class DisapproveRequest(Resource):
+	@jwt_required
 	def put(self, request_id):
 		cur.execute("SELECT request_id FROM requests WHERE request_id={}".format(request_id))
 		res=cur.fetchone()
@@ -181,6 +188,7 @@ class DisapproveRequest(Resource):
 
 
 class AdminResolveRequest(Resource):
+	@jwt_required
 	def put(self, request_id):
 		cur.execute("SELECT request_id FROM requests WHERE request_id={}".format(request_id))
 		res=cur.fetchone()
@@ -194,6 +202,7 @@ class AdminResolveRequest(Resource):
 
 
 class AdminDeleteRequest(Resource):
+	@jwt_required
 	def delete(self, request_id):
 		cur.execute("SELECT * FROM requests WHERE request_id={}".format(request_id))
 		res = cur.fetchone()
