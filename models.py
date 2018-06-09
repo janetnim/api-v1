@@ -4,12 +4,15 @@ from flask import jsonify
 from manage import create_tables,cur,conn
 import psycopg2
 import helper
+import re
 # from werkzeug.security import generate_password_hash, \
 #      check_password_hash
 
 create_tables()
+
 class User_SignUp(Resource):
 	def post(self):
+
 		parser = reqparse.RequestParser()
 		parser.add_argument('username', type=str, help='invalid username')
 		parser.add_argument('email', type=str, help='Please enter email')
@@ -22,9 +25,11 @@ class User_SignUp(Resource):
 
 		if username == "" or email == "" or password == "":
 			return "Please enter all details"
-		if username == " " or email == " " or password == " ":
+		elif username == " " or email == " " or password == " ":
 			return "Invalid entry try again"
-		if not isinstance(username, str)or not isinstance(email, str) or not isinstance(password, str):
+		elif re.match(r'^.+@([?)[a-zA-Z0-9-.])+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$' , email) is None:
+			return jsonify({"message": "invalid email"})
+		elif not isinstance(username, str)or not isinstance(email, str) or not isinstance(password, str):
 			return jsonify({"message": "Enter a string value for username, email and password"})
 		res = helper.get_users_by_username()
 		if res is not None and username in res:
@@ -52,19 +57,22 @@ class User_login(Resource):
 		user = User_login().get_one_user(username)
 		if user is None or len(user)==0:
 			return jsonify({"message":"user not found"}), 404
+		elif user['username'] != username:
+			return jsonify({"message":"incorrect username"})
 		elif user['password'] != password:
 			return jsonify({"message":"incorrect password"})
 		else:
 			token = create_access_token(identity=username)
 			return jsonify({"message": "logged in successfully", "token":token})
 		return make_response("cannot verify", 401, {"WWW-Authentication": "Basic realm='Login required'"})
+		if not isinstance(username, str) or not isinstance(password, str):
+			return jsonify({"message": "Enter a string value for username and password"})
 		if username=="" or password=="":
 			return jsonify({"message":"Enter all details"})
 		if len(username.split()) == 0 or len(password.split())==0:
 			return jsonify({"message": "Invalid entry try again"})
 		helper.get_users_by_username()
-		if not isinstance(username, str) or not isinstance(password, str):
-			return jsonify({"message": "Enter a string value for username and password"})
+		
 		if username not in res:
 			return jsonify({"message":"You are not a user"})
 		return jsonify({"message":"you have logged in successfully"})
@@ -83,18 +91,18 @@ class MakeRequest(Resource):
 		department = args['department']
 		status = args['status']
 
-		if request=="" or department=="":
+		if request =="" or department=="":
 			return jsonify({"message": "Please fill all details"})
-		if not isinstance(request, str) or not isinstance(department, str):
-			return jsonify({"message": "Enter a string value for request and department"})
-		if len(request.split()) == 0 or len(department.split())==0:
+		elif len(request.split()) == 0 or len(department.split())==0:
 			return jsonify({"message": "Invalid entry try again"})
+		elif not isinstance(request, str) or not isinstance(department, str):
+			return jsonify({"message": "Enter a string value for request and department"})
 		helper.insert_user_request(request, department)
-		res = helper.admin_get_all_requests()
-		return jsonify({"res":res})
+		return jsonify({"message":"request made successfully"})
 
 
 class RequestView(Resource):
+	@jwt_required
 	def get(self, request_id):
 		res = helper.get_user_request(request_id)
 		if res is None or len(res) == 0:
@@ -103,6 +111,7 @@ class RequestView(Resource):
 
 
 class ModifyRequest(Resource):
+	@jwt_required
 	# //CANNOT MODIFY IF STATUS IS APPROVE 
 
 	def put(self, request_id):
