@@ -74,10 +74,11 @@ def resolve_request_by_id(request_id):
 	conn.commit()
 
 def admin_get_all_requests():
-	cur.execute("SELECT * FROM requests")
-	cur.fetchall()
+	cur.execute("SELECT * FROM requests;")
+	req = cur.fetchall()
+	return req
 
-def insert_user_request(request, department, personal_id):
+def insert_user_request(request, department):
 	cur.execute("INSERT INTO requests (request, department, status)VALUES(%s,%s,'Pending') RETURNING request_id",(request, department,))
 	conn.commit()
 
