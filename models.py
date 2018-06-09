@@ -3,8 +3,10 @@ from  flask_jwt_extended import (JWTManager, jwt_required, create_access_token, 
 from flask import jsonify
 from manage import create_tables,cur,conn
 import psycopg2
-create_tables()
+import helper
+from werkzeug.security import generate_password_hash, check_password_hash
 
+create_tables()
 class User_SignUp(Resource):
 	def post(self):
 		parser = reqparse.RequestParser()
@@ -17,28 +19,29 @@ class User_SignUp(Resource):
 		email = args['email']
 		password = args['password']
 
-		if username=="" or email=="" or password=="":
+		if username == "" or email == "" or password == "":
 			return "Please enter all details"
-		cur.execute("SELECT username FROM users;")
-		res = cur.fetchall()
-		if username in res:
+		if username == " " or email == " " or password == " ":
+			return "Invalid entry try again"
+		if not isinstance(username, str)or not isinstance(email, str) or not isinstance(password, int):
+            return jsonify({"message": "Enter a string value for username, email and password"})
+        res = helper.get_users_by_username()
+		if res is not None and username in res:
 			return "The user already exists"
-		cur.execute("INSERT INTO users (username, email, password) VALUES('{}','{}','{}')".format(username, email, password))
-		cur.execute("SELECT * FROM users WHERE username  = %s",(username,))
-		conn.commit()
+		helper.add_user(username,password, email)
+		helper.get_user_by_username(username)
 		return "User successfully signed up"
+
 
 class User_login(Resource):
 	def get_one_user(self, username):
-		cur.execute("SELECT * FROM users WHERE username =%s", (username,))
-		user = cur.fetchone()
-		conn.commit()
-		return{
-			"personal_id":user[0],
-			"username":user[1],
-			"email":user[2],
-			"password":user[3]
-		}
+		user = helper.get_user_by_username(username)
+		return {
+				"personal_id":user[0],
+				"username":user[1],
+				"email":user[2],
+				"password":user[3]
+			}
 
 	def post(self):
 		parser = reqparse.RequestParser()
@@ -49,10 +52,9 @@ class User_login(Resource):
 		username = args['username']
 		password = args['password']
 
-		cur.execute("SELECT * FROM users WHERE username = %s AND password = %s;", (username,password))
-
+		helper.get_user_by_username_and_password(username, password)
 		user = User_login().get_one_user(username)
-		if user is None:
+		if user is None or len(user)==0:
 			return jsonify({"message":"user not found"}), 404
 		elif user['password'] != password:
 			return jsonify({"message":"incorrect password"})
@@ -63,11 +65,13 @@ class User_login(Resource):
 
 		if username=="" or password=="":
 			return jsonify({"message":"Enter all details"})
-		cur.execute("SELECT username FROM users")
-		res = cur.fetchall()
-		if username not in res:
+		if len(username.split()) == 0 or len(password.split())==0:
+			return jsonify({"message": "Invalid entry try again"})
+		helper.get_users_by_username()
+		if not isinstance(username, str) or not isinstance(password, str):
+            return jsonify({"message": "Enter a string value for username and password"})
+        if username not in res:
 			return jsonify({"message":"You are not a user"})
-		conn.commit()
 		return jsonify({"message":"you have logged in successfully"})
 
 
@@ -77,67 +81,63 @@ class MakeRequest(Resource):
 		parser.add_argument('request', type=str, help='invalid request')
 		parser.add_argument('department', type=str, help='invalid department')
 		parser.add_argument('status', type=str, help='invalid status')
-		parser.add_argument('personal_id', type=str, help='invalid id')
 		args = parser.parse_args()
 
 		request = args['request']
 		department = args['department']
 		status = args['status']
-		personal_id = args['personal_id']
 
-		if request=="" or department=="" or status=="" or personal_id == "":
-			return jsonify({"message":"Please fill all details"})
-		cur.execute("INSERT INTO requests (request, department, status, personal_id)VALUES('{}','{}','Pending', {})".format(request, department, personal_id))
-		cur.execute("SELECT * FROM requests;")
-		res = cur.fetchall()
-		conn.commit()
+		if request=="" or department=="":
+			return jsonify({"message": "Please fill all details"})
+		if not isinstance(request, str) or not isinstance(department, str):
+            return jsonify({"message": "Enter a string value for request and department"})
+        if len(request.split()) == 0 or len(department.split())==0:
+			return jsonify({"message": "Invalid entry try again"})
+		helper.insert_user_request(request, department)
+		res = helper.admin_get_all_requests()
 		return jsonify({"res":res})
 
 
 class RequestView(Resource):
-	def get(self, request_id, personal_id):
-		cur.execute("SELECT * FROM requests WHERE request_id={} and personal_id={}".format(request_id, personal_id))
-		res = cur.fetchone()
+	def get(self, request_id):
+		res = helper.get_user_request(request_id)
 		if res is None or len(res) == 0:
 			return jsonify({"message":"Request not found"})
 		return jsonify({"res":res})
 
 
 class ModifyRequest(Resource):
-	def put(self, request_id, personal_id):
+	# //CAN ONLY MODIFY IF STATUS IS APPROVE 
+
+	def put(self, request_id):
 		parser = reqparse.RequestParser()
 		parser.add_argument('request', type=str, help='invalid request')
 		args = parser.parse_args()
 
 		request = args['request']
 
-		cur.execute("SELECT * FROM requests WHERE request_id={} and personal_id={}".format(request_id, personal_id))
-		res = cur.fetchone()
+		res = helper.get_user_request(request_id)
 		if res is None or len(res) == 0:
 			return jsonify({"message": "Request does not exist"})
-		cur.execute("UPDATE requests SET request = %s WHERE request_id = %s and personal_id = %s", (request, request_id, personal_id));
-		cur.execute("SELECT * FROM requests WHERE request_id = %s", (request_id,))
-		conn.commit()
+		helper.modify_user_request(request_id)
+		helper.get_request_by_id(request_id)
 		items= cur.fetchone()
 		return jsonify({"items":items})
 
 
 class DeleteRequest(Resource):
-	def delete(self, request_id, personal_id):
-		cur.execute("SELECT * FROM requests WHERE request_id={} and personal_id={}".format(request_id, personal_id))
-		res = cur.fetchone()
+	def delete(self, request_id):
+		res = helper.get_user_request(request_id)
 		if res is None or len(res) == 0:
-			return "Request does not exist!"
-		cur.execute("DELETE  FROM requests WHERE request_id={}".format(request_id))
-		cur.execute("SELECT * FROM requests")
-		conn.commit()
+			return jsonify({"message":"Request does not exist!"})
+		helper.delete_request_by_id(request_id)
+		helper.admin_get_all_requests()
 		return jsonify({"message":"Deleted successfully"})
 
 
 class ViewAllRequest(Resource):
-	def get(self, personal_id):
-		cur.execute("SELECT * FROM requests WHERE personal_id={}".format(personal_id))
-		res =cur.fetchall()
+	def get(self):
+		res = helper.user_get_all()
 		if res is None or len(res) == 0:
 			return "No requests available"
 		return jsonify({"res":res})
@@ -146,8 +146,7 @@ class ViewAllRequest(Resource):
 class AdminGetRequest(Resource):
 	@jwt_required
 	def get(self):
-		cur.execute("SELECT * FROM requests")
-		res =cur.fetchall()
+		helper.admin_get_all_requests()
 		if res is None or len(res) == 0:
 			return "No requests available"
 		return jsonify({"res":res})
@@ -156,13 +155,11 @@ class AdminGetRequest(Resource):
 class ApproveRequest(Resource):
 	@jwt_required		
 	def put(self, request_id):
-		cur.execute("SELECT request_id FROM requests WHERE request_id={}".format(request_id))
-		res=cur.fetchone()
+		res = get_request_by_id(request_id)
 		if res is None:
 			return jsonify({"message":"Request does not exist"})
-		cur.execute("UPDATE requests SET status='Approve' WHERE request_id={}".format(request_id))
-		cur.execute("SELECT * FROM requests WHERE request_id={}".format(request_id))
-		conn.commit()
+		helper.approve_request_by_id(request_id)
+		helper.get_request_by_id(request_id)
 		items= cur.fetchone()
 		return jsonify({"items":items})
 
@@ -170,13 +167,11 @@ class ApproveRequest(Resource):
 class DisapproveRequest(Resource):
 	@jwt_required
 	def put(self, request_id):
-		cur.execute("SELECT request_id FROM requests WHERE request_id={}".format(request_id))
-		res=cur.fetchone()
+		get_request_id(request_id)
 		if res is None:
 			return jsonify({"message":"Request does not exist"})
-		cur.execute("UPDATE requests SET status='Disapprove' WHERE request_id={}".format(request_id))
-		cur.execute("SELECT * FROM requests WHERE request_id={}".format(request_id))
-		conn.commit()
+		helper.disapprove_request_by_id(request_id)
+		helper.get_request_by_id(request_id)
 		items= cur.fetchone()
 		return jsonify({"items":items})
 
@@ -184,13 +179,11 @@ class DisapproveRequest(Resource):
 class AdminResolveRequest(Resource):
 	@jwt_required
 	def put(self, request_id):
-		cur.execute("SELECT request_id FROM requests WHERE request_id={}".format(request_id))
-		res=cur.fetchone()
+		res = helper.get_request_by_id(request_id)
 		if res is None or len(res)==0:
 			return jsonify({"message":"Request does not exist"})
-		cur.execute("UPDATE requests SET status='Complete' WHERE request_id={}".format(request_id))
-		cur.execute("SELECT * FROM requests WHERE request_id={}".format(request_id))
-		conn.commit()
+		helper.resolve_request_by_id(request_id)
+		helper.get_request_by_id(request_id)
 		items= cur.fetchone()
 		return jsonify({"items":items})
 
@@ -198,12 +191,10 @@ class AdminResolveRequest(Resource):
 class AdminDeleteRequest(Resource):
 	@jwt_required
 	def delete(self, request_id):
-		cur.execute("SELECT * FROM requests WHERE request_id={}".format(request_id))
+		helper.get_request_by_id(request_id)
 		res = cur.fetchone()
 		if res is None or len(res) == 0:
 			return "Request does not exist!"
-		cur.execute("DELETE  FROM requests WHERE request_id={}".format(request_id))
-		cur.execute("SELECT * FROM requests")
-		conn.commit()
+		helper.delete_request_by_id(request_id)
+		helper.admin_get_all_requests()
 		return jsonify({"message":"Deleted successfully"})
-
