@@ -12,7 +12,7 @@ class TestModels(unittest.TestCase):
     def setUp(self):
     	create_tables()
     	# self.app = create_app()
-    	self.checker = self.app.test_client()
+    	self.checker = app.test_client()
     	self.request = {"request":"bulb repair","department":"hr", "status": "Pending"}
     	self.user = {"username": "kenny", "email": "kenny@gmail.com", "password": "kenny254"}
 
