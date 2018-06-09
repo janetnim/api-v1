@@ -1,8 +1,8 @@
 import psycopg2
-
+from psycopg2.extras import RealDictCursor
 
 conn = psycopg2.connect("dbname='maintenance' user='postgres' host='localhost' password='123456'")
-cur = conn.cursor()
+cur = conn.cursor(cursor_factory = RealDictCursor)
 
 
 def create_tables():

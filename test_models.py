@@ -10,11 +10,14 @@ class TestModels(unittest.TestCase):
         self.headers = {"Content-Type": "application/json"}
 
 
-    # def test_user_signup_with_empty_details(self):
-    #     data = User_signup().post()
-    #     self.assertEqual("Please enter all details",)
+    def test_user_signup_with_empty_details(self):
+        data = dict(username="schrodinger", email='cat@gmail.com', password='2547')
+        response = self.client.post('/auth/login', data=json.dumps(data), headers=self.headers)
 
-    # 	pass
+        json_result = json.loads(response.get_data(as_text=True))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual("User successfully signed up", json_result['message'])
+
 
     def test_user_login(self):
         credentials = dict(username='admin', password='admin254')
