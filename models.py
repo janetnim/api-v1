@@ -24,7 +24,7 @@ class User_SignUp(Resource):
 			return "Please enter all details"
 		if username == " " or email == " " or password == " ":
 			return "Invalid entry try again"
-		if not isinstance(username, str)or not isinstance(email, str) or not isinstance(password, int):
+		if not isinstance(username, str)or not isinstance(email, str) or not isinstance(password, str):
 			return jsonify({"message": "Enter a string value for username, email and password"})
 		res = helper.get_users_by_username()
 		if res is not None and username in res:
@@ -32,13 +32,13 @@ class User_SignUp(Resource):
 		helper.add_user(username,password, email)
 		helper.get_user_by_username(username)
 		return "User successfully signed up"
-
+	
 
 class User_login(Resource):
 	def get_one_user(self, username):
 		user = helper.get_user_by_username(username)
 		return user
-		
+
 	def post(self):
 		parser = reqparse.RequestParser()
 		parser.add_argument('username', type=str, help='invalid username')
@@ -58,11 +58,10 @@ class User_login(Resource):
 			token = create_access_token(identity=username)
 			return jsonify({"message": "logged in successfully", "token":token})
 		return make_response("cannot verify", 401, {"WWW-Authentication": "Basic realm='Login required'"})
-
 		if username=="" or password=="":
 			return jsonify({"message":"Enter all details"})
 		if len(username.split()) == 0 or len(password.split())==0:
-			return jsoniffy({"message": "Invalid entry try again"})
+			return jsonify({"message": "Invalid entry try again"})
 		helper.get_users_by_username()
 		if not isinstance(username, str) or not isinstance(password, str):
 			return jsonify({"message": "Enter a string value for username and password"})
@@ -72,6 +71,7 @@ class User_login(Resource):
 
 
 class MakeRequest(Resource):
+	@jwt_required
 	def post(self):
 		parser = reqparse.RequestParser()
 		parser.add_argument('request', type=str, help='invalid request')
@@ -103,7 +103,7 @@ class RequestView(Resource):
 
 
 class ModifyRequest(Resource):
-	# //CAN ONLY MODIFY IF STATUS IS APPROVE 
+	# //CANNOT MODIFY IF STATUS IS APPROVE 
 
 	def put(self, request_id):
 		parser = reqparse.RequestParser()
