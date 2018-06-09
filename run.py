@@ -6,6 +6,7 @@ from manage import create_tables
 from models import User_login, User_SignUp, MakeRequest, ViewAllRequest, RequestView, ModifyRequest, DeleteRequest, AdminGetRequest, ApproveRequest, DisapproveRequest,AdminResolveRequest, AdminDeleteRequest
 # from test.test_api import TestModels
 
+
 def create_app():
 
 
@@ -29,6 +30,7 @@ def create_app():
 	api.add_resource(DisapproveRequest, '/requests/<int:request_id>/disapprove', methods=['PUT'])
 	api.add_resource(AdminResolveRequest, '/requests/<int:request_id>/resolve', methods=['PUT'])
 	api.add_resource(AdminDeleteRequest, '/requests/<int:request_id>/delete', methods=['DELETE'])
+	
 	return app
 
 
