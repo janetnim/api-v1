@@ -12,7 +12,7 @@ class TestModels(unittest.TestCase):
 
     def test_user_signup_with_empty_details(self):
         data = dict(username="schrodinger", email='cat@gmail.com', password='2547')
-        response = self.client.post('/auth/login', data=json.dumps(data), headers=self.headers)
+        response = self.client.post('/auth/signup', data=json.dumps(data), headers=self.headers)
 
         json_result = json.loads(response.get_data(as_text=True))
         self.assertEqual(200, response.status_code)
