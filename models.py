@@ -4,7 +4,8 @@ from flask import jsonify
 from manage import create_tables,cur,conn
 import psycopg2
 import helper
-from werkzeug.security import generate_password_hash, check_password_hash
+# from werkzeug.security import generate_password_hash, \
+#      check_password_hash
 
 create_tables()
 class User_SignUp(Resource):
