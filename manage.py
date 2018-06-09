@@ -15,3 +15,4 @@ def create_tables():
 		print("Cannot connect to database")
 
 create_tables()
+
