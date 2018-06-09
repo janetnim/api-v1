@@ -25,8 +25,8 @@ class User_SignUp(Resource):
 		if username == " " or email == " " or password == " ":
 			return "Invalid entry try again"
 		if not isinstance(username, str)or not isinstance(email, str) or not isinstance(password, int):
-            return jsonify({"message": "Enter a string value for username, email and password"})
-        res = helper.get_users_by_username()
+			return jsonify({"message": "Enter a string value for username, email and password"})
+		res = helper.get_users_by_username()
 		if res is not None and username in res:
 			return "The user already exists"
 		helper.add_user(username,password, email)
@@ -37,13 +37,8 @@ class User_SignUp(Resource):
 class User_login(Resource):
 	def get_one_user(self, username):
 		user = helper.get_user_by_username(username)
-		return {
-				"personal_id":user[0],
-				"username":user[1],
-				"email":user[2],
-				"password":user[3]
-			}
-
+		return user
+		
 	def post(self):
 		parser = reqparse.RequestParser()
 		parser.add_argument('username', type=str, help='invalid username')
@@ -67,11 +62,11 @@ class User_login(Resource):
 		if username=="" or password=="":
 			return jsonify({"message":"Enter all details"})
 		if len(username.split()) == 0 or len(password.split())==0:
-			return jsonify({"message": "Invalid entry try again"})
+			return jsoniffy({"message": "Invalid entry try again"})
 		helper.get_users_by_username()
 		if not isinstance(username, str) or not isinstance(password, str):
-            return jsonify({"message": "Enter a string value for username and password"})
-        if username not in res:
+			return jsonify({"message": "Enter a string value for username and password"})
+		if username not in res:
 			return jsonify({"message":"You are not a user"})
 		return jsonify({"message":"you have logged in successfully"})
 
@@ -91,8 +86,8 @@ class MakeRequest(Resource):
 		if request=="" or department=="":
 			return jsonify({"message": "Please fill all details"})
 		if not isinstance(request, str) or not isinstance(department, str):
-            return jsonify({"message": "Enter a string value for request and department"})
-        if len(request.split()) == 0 or len(department.split())==0:
+			return jsonify({"message": "Enter a string value for request and department"})
+		if len(request.split()) == 0 or len(department.split())==0:
 			return jsonify({"message": "Invalid entry try again"})
 		helper.insert_user_request(request, department)
 		res = helper.admin_get_all_requests()
@@ -199,3 +194,6 @@ class AdminDeleteRequest(Resource):
 		helper.delete_request_by_id(request_id)
 		helper.admin_get_all_requests()
 		return jsonify({"message":"Deleted successfully"})
+
+if __name__ == '__main__':
+	print(User_login().get_one_user("kiki"))
