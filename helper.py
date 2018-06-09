@@ -47,7 +47,8 @@ def get_request_id():
 
 def user_get_all():
 	cur.execute("SELECT * FROM requests")
-	cur.fetchall()
+	res = cur.fetchall()
+	return res
 
 def put_modify_request_by_id(request_id):
 	cur.execute("UPDATE requests SET request = %s WHERE request_id = %s", (request, request_id,))
@@ -87,3 +88,5 @@ def modify_user_request(request_id, personal_id):
 
 
 
+if __name__ == '__main__':
+	print(get_user_by_username("kiki"))
