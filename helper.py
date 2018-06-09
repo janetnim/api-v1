@@ -23,7 +23,7 @@ def get_users_by_username():
 	conn.commit()
 	return res
 
-def get_user_request(request_id, personal_id):
+def get_user_request(request_id):
 	cur.execute("SELECT * FROM requests WHERE request_id=%s",(request_id,))
 	cur.fetchone()
 
@@ -44,6 +44,7 @@ def get_request_by_id(request_id):
 def get_request_id():
 	cur.execute("SELECT request_id FROM requests WHERE request_id=%s",(request_id,))
 	res=cur.fetchone()
+	return res
 
 def user_get_all():
 	cur.execute("SELECT * FROM requests")
