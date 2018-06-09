@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restful import  Api, Resource
 from config import config
 from flask_jwt_extended import JWTManager
-import manage
+from manage import create_tables
 from models import User_login, User_SignUp, MakeRequest, ViewAllRequest, RequestView, ModifyRequest, DeleteRequest, AdminGetRequest, ApproveRequest, DisapproveRequest,AdminResolveRequest, AdminDeleteRequest
 # from test.test_api import TestModels
 
