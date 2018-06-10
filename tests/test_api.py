@@ -3,7 +3,7 @@ import run
 from manage import create_tables,cur,conn
 import json
 import models
-# from run import create_app
+from run import app
 
 
 class TestModels(unittest.TestCase):

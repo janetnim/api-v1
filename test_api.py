@@ -1,18 +1,16 @@
 import unittest
 import run
-from manage import create_tables,cur,conn
 import json
 import models
-# from run import create_app
+from run import create_app
 
 
 class TestModels(unittest.TestCase):
     """Test models for verion 2 api"""
 
     def setUp(self):
-    	create_tables()
     	# self.app = create_app()
-    	self.checker = app.test_client()
+    	self.checker = create_app("TESTING").test_client()
     	self.request = {"request":"bulb repair","department":"hr", "status": "Pending"}
     	self.user = {"username": "kenny", "email": "kenny@gmail.com", "password": "kenny254"}
 
@@ -56,8 +54,8 @@ class TestModels(unittest.TestCase):
 
     def test_api_user_view_a_request(self):
     	rv = self.checker.post('/users/requests', data=self.request)
-    	self.assertEqual(rev.status_code, 201)
-    	response = json.loads(rev.data.decode('utf-8').replace("'", "\""))
+    	self.assertEqual(rv.status_code, 201)
+    	response = json.loads(rv.data.decode('utf-8').replace("'", "\""))
     	res = self.checker.get('/users/requests/{}'.format(response['request_id']))
     	self.assertEqual(res.status_code, 200)
     	self.assertIn("bulb repair", str(res.data))
