@@ -1,94 +1,106 @@
 import psycopg2
-import psycopg2.extras
-from manage import create_tables, cur, conn
+from psycopg2.extras import RealDictCursor
 
 
-create_tables()
+class Database:
 
-def add_user(username,password, email):
-	cur.execute("INSERT INTO users(username,email,password) VALUES (%s, %s, %s) RETURNING personal_id;", (username, email, password))
-	conn.commit()
-	result = cur.fetchone()
-	return result['personal_id']
+	def __init__(self):
+		self.conn = None
+		self.cur = None
 
-def get_user_by_username(username):
-	cur.execute("SELECT * FROM users WHERE username = %s", (username,))
-	result = cur.fetchone()
-	conn.commit()
-	return result
+	def initialize(self,app):
+		database_name = app.config['DATABASE_NAME']
+		self.conn = psycopg2.connect("dbname='{}' user='postgres' host='localhost' password='123456'".format(database_name))
+		self.cur = self.conn.cursor(cursor_factory = RealDictCursor)
 
-def get_users_by_username():
-	cur.execute("SELECT username FROM users")
-	res = cur.fetchall()
-	conn.commit()
-	return res
+		print(self.conn)
+		self.cur.execute("CREATE TABLE IF NOT EXISTS users (personal_id serial PRIMARY KEY, username varchar  NOT NULL, email varchar  NOT NULL, password varchar  NOT NULL, role varchar)")
+		self.cur.execute("CREATE TABLE IF NOT EXISTS requests (request_id serial PRIMARY KEY, request varchar, department varchar, status varchar, personal_id integer REFERENCES users (personal_id) ON DELETE CASCADE)")
+		self.cur.execute("SELECT * FROM users WHERE username != 'admin'")
+		self.conn.commit()
 
-def get_user_request(request_id):
-	cur.execute("SELECT * FROM requests WHERE request_id=%s",(request_id,))
-	cur.fetchone()
+	def drop_everything(self):
+		self.cur.execute("DROP TABLE requests;")
+		self.cur.execute("DROP TABLE users;")
+		self.conn.commit()
 
-def get_user_by_username_and_password(username, password):
-	cur.execute("SELECT * FROM users WHERE username = %s and password = %s",(username, password,))
-	return cur.fetchone()
+	def add_user(self,username,password, email):
+		self.cur.execute("INSERT INTO users(username,email,password) VALUES (%s, %s, %s) RETURNING personal_id;", (username, email, password))
+		self.conn.commit()
+		result = self.cur.fetchone()
+		return result['personal_id']
 
-def post_request(request, department, status):
-	cur.execute("INSERT INTO requests(request,department,status) VALUES(%s, %s, 'Pending') RETURNING request_id", (request, department))
-	res = cur.fetchone()
-	conn.commit()
-	return result['request_id']
+	def get_user_by_username(self,username):
+		self.cur.execute("SELECT * FROM users WHERE username = %s;", (username,))
+		result = self.cur.fetchone()
+		self.conn.commit()
+		return result
 
-def get_request_by_id(request_id):
-	cur.execute("SELECT * FROM requests WHERE request_id = %s",(request_id,))
-	return cur.fetchone()
+	def get_users_by_username(self):
+		self.cur.execute("SELECT username FROM users")
+		res = self.cur.fetchall()
+		self.conn.commit()
+		return res
 
-def get_request_id():
-	cur.execute("SELECT request_id FROM requests WHERE request_id=%s",(request_id,))
-	res=cur.fetchone()
-	return res
+	def get_user_request(self,request_id):
+		self.cur.execute("SELECT * FROM requests WHERE request_id=%s",(request_id,))
+		self.cur.fetchone()
 
-def user_get_all():
-	cur.execute("SELECT * FROM requests")
-	res = cur.fetchall()
-	return res
+	def get_user_by_username_and_password(self,username, password):
+		self.cur.execute("SELECT * FROM users WHERE username = %s and password = %s",(username, password,))
+		return self.cur.fetchone()
 
-def put_modify_request_by_id(request_id):
-	cur.execute("UPDATE requests SET request = %s WHERE request_id = %s", (request, request_id,))
-	res = cur.fetchone()
-	conn.commit()
-	return res
+	def post_request(self,request, department, status):
+		self.cur.execute("INSERT INTO requests(request,department,status) VALUES(%s, %s, 'Pending') RETURNING request_id", (request, department))
+		res = self.cur.fetchone()
+		self.conn.commit()
+		return result['request_id']
 
-def  delete_request_by_id(request_id):
-	cur.execute("DELETE  FROM requests WHERE request_id = %s", (request_id,))
-	conn.commit()
+	def get_request_by_id(self,request_id):
+		self.cur.execute("SELECT * FROM requests WHERE request_id = %s",(request_id,))
+		return self.cur.fetchone()
 
-def approve_request_by_id(request_id):
-	cur.execute("UPDATE requests SET status='Approve' WHERE request_id=%s",(request_id,))
-	conn.commit()
+	def get_request_id(self):
+		self.cur.execute("SELECT request_id FROM requests WHERE request_id=%s",(request_id,))
+		res=self.cur.fetchone()
+		return res
 
-def disapprove_request_by_id(request_id):
-	cur.execute("UPDATE requests SET status='Disapprove' WHERE request_id=%s",(request_id,))
-	conn.commit()
+	def user_get_all(self,):
+		self.cur.execute("SELECT * FROM requests")
+		res = self.cur.fetchall()
+		return res
 
-def resolve_request_by_id(request_id):
-	cur.execute("UPDATE requests SET status='Resolved' WHERE request_id=%s",(request_id,))
-	conn.commit()
+	def put_modify_request_by_id(self,request_id):
+		self.cur.execute("UPDATE requests SET request = %s WHERE request_id = %s", (request, request_id,))
+		res = self.cur.fetchone()
+		self.conn.commit()
+		return res
 
-def admin_get_all_requests():
-	cur.execute("SELECT * FROM requests;")
-	req = cur.fetchall()
-	return req
+	def  delete_request_by_id(self,request_id):
+		self.cur.execute("DELETE  FROM requests WHERE request_id = %s", (request_id,))
+		self.conn.commit()
 
-def insert_user_request(request, department):
-	cur.execute("INSERT INTO requests (request, department, status)VALUES(%s,%s,'Pending') RETURNING request_id",(request, department,))
-	conn.commit()
+	def approve_request_by_id(self,request_id):
+		self.cur.execute("UPDATE requests SET status='Approve' WHERE request_id=%s",(request_id,))
+		self.conn.commit()
 
-def modify_user_request(request_id, personal_id):
-	cur.execute("UPDATE requests SET request = %s WHERE request_id = %s", (request, request_id,))
-	conn.commit()
+	def disapprove_request_by_id(self,request_id):
+		self.cur.execute("UPDATE requests SET status='Disapprove' WHERE request_id=%s",(request_id,))
+		self.conn.commit()
 
+	def resolve_request_by_id(self,request_id):
+		self.cur.execute("UPDATE requests SET status='Resolved' WHERE request_id=%s",(request_id,))
+		self.conn.commit()
 
+	def admin_get_all_requests(self,):
+		self.cur.execute("SELECT * FROM requests;")
+		req = self.cur.fetchall()
+		return req
 
+	def insert_user_request(self,request, department):
+		self.cur.execute("INSERT INTO requests (request, department, status)VALUES(%s,%s,'Pending') RETURNING request_id",(request, department,))
+		self.conn.commit()
 
-
-if __name__ == '__main__':
-	print(get_user_by_username("kiki"))
+	def modify_user_request(self,request_id, personal_id):
+		self.cur.execute("UPDATE requests SET request = %s WHERE request_id = %s", (request, request_id,))
+		self.conn.commit()
