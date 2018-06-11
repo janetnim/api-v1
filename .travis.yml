@@ -1,0 +1,14 @@
+language: python
+python:
+  -"3.6"
+services:
+  -postgresql
+install:
+  -pip install -r requirements.txt
+before_script:
+  -psql -c 'create databse maintenance;' -U postgres
+  -psql -c "create user postgres with password '123456'; "-U postgres
+script:
+  - python -m pytest --cov-report term-missing --cov=test_api.py
+after_success:
+  -coveralls
