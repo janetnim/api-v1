@@ -44,7 +44,7 @@ class User_SignUp(Resource):
 		res = helper.get_user_by_username(username)
 		if res is not None:
 			return {"message": "The user already exists"}, 202
-		helper.add_user(username,bcrypt.encrypt(password), email)
+		helper.add_user(username, bcrypt.encrypt(password), email)
 		helper.get_user_by_username(username)
 		return {"message": "User successfully signed up"}, 201
 	
@@ -75,7 +75,6 @@ class User_login(Resource):
 			return {"message":"incorrect password"}
 		elif re.match(r'^[0-9]+$', username) is not None:
 			return {"message": "invalid username"}, 400
-
 		if not isinstance(username, str) or not isinstance(password, str):
 			return {"message": "Enter a string value for username and password"}
 		if username=="" or password=="":
