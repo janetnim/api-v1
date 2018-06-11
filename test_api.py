@@ -1,7 +1,7 @@
 import unittest
 import json
 from run import create_app
-from tests.helper import helper
+from helper import helper
 
 
 class TestModels(unittest.TestCase):
