@@ -1,8 +1,11 @@
 language: python
+
 python:
-  -"3.6.4"
+  -"3.6"
+
 services:
   -postgresql
+
 install:
   -pip install -r requirements.txt
 
@@ -10,10 +13,13 @@ env:
   global:
     - DB_NAME=janet
     - DB_PASSWORD=123456
+
 before_script:
   -psql -c 'create database maintenance;' -U postgres
   -psql -c "create user janet with password '123456'; "-U postgres
+
 script:
   - python -m pytest --cov-report term-missing --cov=test_api.py
+  
 after_success:
   -coveralls
