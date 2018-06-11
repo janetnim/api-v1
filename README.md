@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿[![Build Status](https://travis-ci.org/janetnim/api-v1.svg?branch=ft-api-test)](https://travis-ci.org/janetnim/api-v1)
 [![Coverage Status](https://coveralls.io/repos/github/janetnim/api-v1/badge.svg?branch=ft-api-test)](https://coveralls.io/github/janetnim/api-v1?branch=ft-api-test) 
 # Maintenance Tracker Api V1
@@ -48,3 +49,7 @@ git checkout develop
 [Pivotal tracker stories](https://www.pivotaltracker.com/n/projects/2173438)
 [Pull request](https://github.com/janetnim/api-v1/pull/1)
 
+=======
+# api-v1
+This is the API version 1 repository for the maintenance tracker application
+>>>>>>> 034e1fa77c047ed70595c55be5e6ba886d212b37
