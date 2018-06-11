@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_restful import  Api, Resource
-from config import config
 from flask_jwt_extended import JWTManager
 from helper import helper
 
