@@ -35,7 +35,7 @@ class TestModels(unittest.TestCase):
 
     def test_api_signup(self):
         data = self.user
-        res = self.checker.post('/api/v2/auth/signup', data=json.dumps(data), headers=self.header)+++++
+        res = self.checker.post('/api/v2/auth/signup', data=json.dumps(data), headers=self.header)
 
         result = json.loads(res.get_data(as_text=True))
 
