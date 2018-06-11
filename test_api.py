@@ -68,12 +68,23 @@ class TestModels(unittest.TestCase):
         self.assertEqual(res.status_code, 404)
         self.assertEqual(result['message'], "user not found")
 
+    def test_empty_login_details(self):
+        user = {'username': "", 'password': ""}
+        res = self.checker.post('/api/v2/auth/login', data=json.dumps(user), headers=self.header)
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], "user not found")
+
     def test_api_user_make_request(self):
         res = self.checker.post('/api/v2/users/requests', data=json.dumps(self.request), headers=self.loggedInUserHeaders)
         self.assertEqual(res.status_code, 201)
 
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], "request made successfully")
+
+    def test_make_empty_request(self):
+        res = self.checker.post('/api/v2/users/requests', data=json.dumps({"request": "", "department":"", "status":"Pending"}), headers=self.loggedInUserHeaders)
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], "Please fill all details")
 
     def test_api_user_view_a_request(self):
         rv = self.checker.post('/api/v2/users/requests', data=json.dumps(self.request), headers=self.loggedInUserHeaders)
@@ -83,6 +94,15 @@ class TestModels(unittest.TestCase):
         res = self.checker.get('/api/v2/users/requests/1', headers=self.loggedInUserHeaders)
 
         self.assertEqual(res.status_code, 200)
+
+    def test_view_inexisting_request(self):
+        rv = self.checker.post('/api/v2/users/requests', data=json.dumps(self.request), headers=self.loggedInUserHeaders)
+        self.assertEqual(rv.status_code, 201)
+
+        response = json.loads(rv.data.decode())
+        res = self.checker.get('/api/v2/users/requests/10', headers=self.loggedInUserHeaders)
+
+        self.assertEqual(res.status_code, 404)
 
     def test_api_user_view_all_requests(self):
         res = self.checker.post('/api/v2/users/requests', data=json.dumps(self.request), headers=self.loggedInUserHeaders)
