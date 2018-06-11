@@ -17,6 +17,7 @@ def role_admin_required(f):
 		return f(*args, **kwargs)
 	return wrapped
 
+
 class User_SignUp(Resource):
 	def post(self):
 
@@ -62,13 +63,15 @@ class User_login(Resource):
 		username = args['username']
 		password = args['password']
 
-		helper.get_user_by_username_and_password(username, bcrypt.encrypt(password))
+		hash = bcrypt.encrypt(password)
+
+		# helper.get_user_by_username_and_password(username, password)
 		user = User_login().get_one_user(username)
 		if user is None or len(user)==0:
 			return {"message":"user not found"}, 404
 		elif user['username'] != username:
 			return {"message":"incorrect username"}
-		elif user['password'] != password:
+		if not bcrypt.verify(password,user['password']):
 			return {"message":"incorrect password"}
 		elif re.match(r'^[0-9]+$', username) is not None:
 			return {"message": "invalid username"}, 400
