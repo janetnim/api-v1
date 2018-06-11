@@ -15,7 +15,8 @@ class Database:
 		self.cur = self.conn.cursor(cursor_factory = RealDictCursor)
 
 		self.cur.execute("CREATE TABLE IF NOT EXISTS users (personal_id serial PRIMARY KEY, username varchar  NOT NULL, email varchar  NOT NULL, password varchar  NOT NULL, role varchar)")
-		self.cur.execute("CREATE TABLE IF NOT EXISTS requests (request_id serial PRIMARY KEY, request varchar, department varchar, status varchar, personal_id integer REFERENCES users (personal_id) ON DELETE CASCADE)")
+		self.cur.execute("CREATE TABLE IF NOT EXISTS requests (request_id serial PRIMARY KEY, request varchar, "\
+			"department varchar, status varchar, personal_id integer REFERENCES users (personal_id) ON DELETE CASCADE)")
 		
 		self.cur.execute("SELECT * FROM users WHERE username = 'admin'")
 		result = self.cur.fetchone()
