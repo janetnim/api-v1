@@ -2,11 +2,20 @@ from flask_restful import Resource, reqparse
 from  flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_jwt_identity, get_raw_jwt)
 from flask import jsonify
 import psycopg2
-from run import helper
+from  helper import helper
 import re
-# from werkzeug.security import generate_password_hash, \
-#      check_password_hash
+from functools import wraps
+from passlib.handlers.bcrypt import bcrypt
 
+
+def role_admin_required(f):
+	@wraps(f)
+	def wrapped(*args, **kwargs):
+		user = User_login().get_one_user(get_jwt_identity())
+		if user['role'] != 'admin':
+			return {"message": "You are not an admin"}, 401
+		return f(*args, **kwargs)
+	return wrapped
 
 class User_SignUp(Resource):
 	def post(self):
@@ -33,10 +42,10 @@ class User_SignUp(Resource):
 			return {"message": "Enter a string value for username and password"}
 		res = helper.get_user_by_username(username)
 		if res is not None:
-			return {"message": "The user already exists"}, 400
-		helper.add_user(username,password, email)
+			return {"message": "The user already exists"}, 202
+		helper.add_user(username,bcrypt.encrypt(password), email)
 		helper.get_user_by_username(username)
-		return "User successfully signed up"
+		return {"message": "User successfully signed up"}, 201
 	
 
 class User_login(Resource):
@@ -45,8 +54,6 @@ class User_login(Resource):
 		return user
 
 	def post(self):
-		print("==============================================")
-		print(helper.conn)
 		parser = reqparse.RequestParser()
 		parser.add_argument('username', type=str, help='invalid username')
 		parser.add_argument('password', type=str, help='invalid password')
@@ -55,7 +62,7 @@ class User_login(Resource):
 		username = args['username']
 		password = args['password']
 
-		helper.get_user_by_username_and_password(username, password)
+		helper.get_user_by_username_and_password(username, bcrypt.encrypt(password))
 		user = User_login().get_one_user(username)
 		if user is None or len(user)==0:
 			return {"message":"user not found"}, 404
@@ -65,20 +72,16 @@ class User_login(Resource):
 			return {"message":"incorrect password"}
 		elif re.match(r'^[0-9]+$', username) is not None:
 			return {"message": "invalid username"}, 400
-		else:
-			token = create_access_token(identity=username)
-			return {"message": "logged in successfully", "token":token}
-		return make_response("cannot verify", 401, {"WWW-Authentication": "Basic realm='Login required'"})
+
 		if not isinstance(username, str) or not isinstance(password, str):
 			return {"message": "Enter a string value for username and password"}
 		if username=="" or password=="":
 			return {"message":"Enter all details"}
 		if len(username.split()) == 0 or len(password.split())==0:
 			return {"message": "Invalid entry try again"}
-		helper.get_users_by_username()
-		if username not in res:
-			return {"message":"You are not a user"}
-		return {"message":"you have logged in successfully"}
+
+		token = create_access_token(identity=username)
+		return {"message": "You have logged in successfully", "token":token}
 
 
 class MakeRequest(Resource):
@@ -93,6 +96,7 @@ class MakeRequest(Resource):
 		request = args['request']
 		department = args['department']
 		status = args['status']
+		user = User_login().get_one_user(get_jwt_identity())
 
 		if request =="" or department=="":
 			return {"message": "Please fill all details"}
@@ -100,112 +104,122 @@ class MakeRequest(Resource):
 			return {"message": "Invalid entry try again"}
 		elif not isinstance(request, str) or not isinstance(department, str):
 			return {"message": "Enter a string value for request and department"}
-		helper.insert_user_request(request, department)
-		return {"message":"request made successfully"}
+		request_id = helper.insert_user_request(request, department, user['personal_id'])
+		return {"message":"request made successfully", "request_id": request_id} , 201
 
 
 class RequestView(Resource):
 	@jwt_required
 	def get(self, request_id):
-		res = helper.get_user_request(get_jwt_identity())
+		user = User_login().get_one_user(get_jwt_identity())
+		res = helper.get_user_request(request_id, user['personal_id'])
 		if res is None or len(res) == 0:
-			return {"message":"Request not found"}
+			return {"message":"Request not found"}, 404
 		return {"res":res}
 
 
 class ModifyRequest(Resource):
 	@jwt_required
-	# //CANNOT MODIFY IF STATUS IS APPROVE 
-
 	def put(self, request_id):
 		parser = reqparse.RequestParser()
 		parser.add_argument('request', type=str, help='invalid request')
 		args = parser.parse_args()
 
-		request = args['request']
+		req = args['request']
 
-		res = helper.get_user_request(request_id)
+		user = User_login().get_one_user(get_jwt_identity())
+
+		res = helper.get_user_request(request_id, user['personal_id'])
 		if res is None or len(res) == 0:
 			return {"message": "Request does not exist"}
-		helper.modify_user_request(request_id)
-		helper.get_request_by_id(request_id)
-		items= cur.fetchone()
-		return {"items":items}
+		if res['status'] == "Pending":
+			helper.modify_user_request(request_id, req)
+		else:
+			return {"message": "Only a pending request can be modified."}, 400
+		res = helper.get_user_request(request_id, user['personal_id'])
+		return {"request" : res}
 
 
 class DeleteRequest(Resource):
+	@jwt_required
 	def delete(self, request_id):
-		res = helper.get_user_request(request_id)
+		user = User_login().get_one_user(get_jwt_identity())
+		res = helper.get_user_request(request_id, user['personal_id'])
 		if res is None or len(res) == 0:
 			return {"message":"Request does not exist!"}
 		helper.delete_request_by_id(request_id)
 		helper.admin_get_all_requests()
-		return {"message":"Deleted successfully"}
+		return {"message":"Deleted successfully"}, 200
 
 
 class ViewAllRequest(Resource):
+	@jwt_required
 	def get(self):
-		res = helper.user_get_all()
+		user = User_login().get_one_user(get_jwt_identity())
+		res = helper.user_get_all(user['personal_id'])
 		if res is None or len(res) == 0:
 			return "No requests available"
 		return {"res":res}
 
-	
+	'''Admin endpoints'''
 class AdminGetRequest(Resource):
 	@jwt_required
+	@role_admin_required
 	def get(self):
-		helper.admin_get_all_requests()
+		res = helper.admin_get_all_requests()
 		if res is None or len(res) == 0:
 			return "No requests available"
 		return {"res":res}
 
 
 class ApproveRequest(Resource):
-	@jwt_required		
+	@jwt_required
+	@role_admin_required		
 	def put(self, request_id):
-		res = get_request_by_id(request_id)
+		res = helper.get_request_by_id(request_id)
 		if res is None:
 			return {"message":"Request does not exist"}
 		helper.approve_request_by_id(request_id)
-		helper.get_request_by_id(request_id)
-		items= cur.fetchone()
-		return {"items":items}
+		return {"Request":res}
+
+class AdminGetOneRequest(Resource):
+	@jwt_required
+	@role_admin_required
+	def get(self, request_id):
+		res = helper.get_request_by_id(request_id)
+		if res is None:
+			return {"message":"Request does not exist"}
+		return {"Request":res}
 
 
 class DisapproveRequest(Resource):
 	@jwt_required
+	@role_admin_required
 	def put(self, request_id):
-		get_request_id(request_id)
+		res = helper.get_request_by_id(request_id)
 		if res is None:
 			return {"message":"Request does not exist"}
 		helper.disapprove_request_by_id(request_id)
-		helper.get_request_by_id(request_id)
-		items= cur.fetchone()
-		return {"items":items}
+		return {"Request":res}
 
 
 class AdminResolveRequest(Resource):
 	@jwt_required
+	@role_admin_required
 	def put(self, request_id):
 		res = helper.get_request_by_id(request_id)
-		if res is None or len(res)==0:
+		if res is None:
 			return {"message":"Request does not exist"}
 		helper.resolve_request_by_id(request_id)
-		helper.get_request_by_id(request_id)
-		items= cur.fetchone()
-		return {"items":items}
-
+		return {"Request":res}
 
 class AdminDeleteRequest(Resource):
 	@jwt_required
+	@role_admin_required
 	def delete(self, request_id):
-		helper.get_request_by_id(request_id)
-		res = cur.fetchone()
+		res = helper.get_request_by_id(request_id)
 		if res is None or len(res) == 0:
 			return "Request does not exist!"
 		helper.delete_request_by_id(request_id)
 		helper.admin_get_all_requests()
-		return {"message":"Deleted successfully"}
-
-if __name__ == '__main__':
-	print(User_login().get_one_user("kiki"))
+		return {"message":"Deleted successfully"}, 200
