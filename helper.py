@@ -64,7 +64,10 @@ class Database:
 			return result
 		return None
 
-
+	def get_users(self):
+		self.cur.execute("SELECT * FROM users WHERE username!='admin'")
+		res = self.cur.fetchall()
+		return res
 
 	def get_user_by_personal_id(self):
 		self.cur.execute("SELECT * FROM users WHERE personal_id= %s", (personal_id,))
