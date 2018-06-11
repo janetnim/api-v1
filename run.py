@@ -26,6 +26,7 @@ def create_app(environment = "DEVELOPMENT"):
 
 	api.add_resource(models.User_SignUp, '/api/v2/auth/signup', methods=['POST'])
 	api.add_resource(models.User_login, '/api/v2/auth/login', methods=['POST'])
+	api.add_resource(models.Get_All_Users, '/api/v2/users', methods=['GET'])
 	api.add_resource(models.MakeRequest, '/api/v2/users/requests', methods=['POST'])
 	api.add_resource(models.ViewAllRequest, '/api/v2/users/requests', methods=['GET'])
 	api.add_resource(models.RequestView, '/api/v2/users/requests/<int:request_id>', methods=['GET'])
