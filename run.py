@@ -2,9 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restful import  Api, Resource
 from config import config
 from flask_jwt_extended import JWTManager
-from helper import Database
-
-helper = Database()
+from helper import helper
 
 import models
 
@@ -27,22 +25,23 @@ def create_app(environment = "DEVELOPMENT"):
 	jwt = JWTManager(app)
 
 
-	# api.add_resource(models.User_SignUp, '/auth/signup', methods=['POST'])
-	api.add_resource(models.User_login, '/auth/login', methods=['POST'])
-	api.add_resource(models.MakeRequest, '/users/requests', methods=['POST'])
-	api.add_resource(models.ViewAllRequest, '/users/requests', methods=['GET'])
-	api.add_resource(models.RequestView, '/users/requests/<int:request_id>', methods=['GET'])
-	api.add_resource(models.ModifyRequest, '/users/requests/<int:request_id>', methods=['PUT'])
-	api.add_resource(models.DeleteRequest, '/users/requests/<int:request_id>', methods=['DELETE'])
-	api.add_resource(models.AdminGetRequest, '/requests', methods=['GET'])
-	api.add_resource(models.ApproveRequest, '/requests/<int:request_id>/approve', methods=['PUT'])
-	api.add_resource(models.DisapproveRequest, '/requests/<int:request_id>/disapprove', methods=['PUT'])
-	api.add_resource(models.AdminResolveRequest, '/requests/<int:request_id>/resolve', methods=['PUT'])
-	api.add_resource(models.AdminDeleteRequest, '/requests/<int:request_id>/delete', methods=['DELETE'])
+	api.add_resource(models.User_SignUp, '/api/v2/auth/signup', methods=['POST'])
+	api.add_resource(models.User_login, '/api/v2/auth/login', methods=['POST'])
+	api.add_resource(models.MakeRequest, '/api/v2/users/requests', methods=['POST'])
+	api.add_resource(models.ViewAllRequest, '/api/v2/users/requests', methods=['GET'])
+	api.add_resource(models.RequestView, '/api/v2/users/requests/<int:request_id>', methods=['GET'])
+	api.add_resource(models.ModifyRequest, '/api/v2/users/requests/<int:request_id>', methods=['PUT'])
+	api.add_resource(models.DeleteRequest, '/api/v2/users/requests/<int:request_id>', methods=['DELETE'])
+	api.add_resource(models.AdminGetRequest, '/api/v2/requests', methods=['GET'])
+	api.add_resource(models.AdminGetOneRequest,"/api/v2/requests/<int:request_id>", methods=['GET'])
+	api.add_resource(models.ApproveRequest, '/api/v2/requests/<int:request_id>/approve', methods=['PUT'])
+	api.add_resource(models.DisapproveRequest, '/api/v2/requests/<int:request_id>/disapprove', methods=['PUT'])
+	api.add_resource(models.AdminResolveRequest, '/api/v2/requests/<int:request_id>/resolve', methods=['PUT'])
+	api.add_resource(models.AdminDeleteRequest, '/api/v2/requests/<int:request_id>/delete', methods=['DELETE'])
 	
 	return app
 
 app = create_app()
 
 if __name__ == '__main__':
-	app.run(debug=True, host="192.168.0.194")
+	app.run(debug=True)
