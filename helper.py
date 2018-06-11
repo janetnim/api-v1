@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from passlib.handlers.bcrypt import bcrypt
-
+import os
 
 class Database:
 
@@ -11,7 +11,7 @@ class Database:
 
 	def initialize(self,app):
 		database_name = app.config['DATABASE_NAME']
-		self.conn = psycopg2.connect("dbname='{}' user='postgres' host='localhost' password='123456'".format(database_name))
+		self.conn = psycopg2.connect("dbname={} user='postgres' host='localhost' password='123456'". format(database_name))
 		self.cur = self.conn.cursor(cursor_factory = RealDictCursor)
 
 		self.cur.execute("CREATE TABLE IF NOT EXISTS users (personal_id serial PRIMARY KEY, username varchar  NOT NULL, email varchar  NOT NULL, password varchar  NOT NULL, role varchar)")
@@ -20,7 +20,7 @@ class Database:
 		self.cur.execute("SELECT * FROM users WHERE username = 'admin'")
 		result = self.cur.fetchone()
 		if result is None:
-			self.cur.execute("INSERT INTO users(username,email,password,role) VALUES('admin', 'admin@gmail.com','admin254','admin');")
+			self.cur.execute("INSERT INTO users(username,email,password,role) VALUES('admin', 'admin@gmail.com','{}','admin');".format(bcrypt.encrypt("admin254")))
 		self.conn.commit()
 
 	def drop_everything(self):
@@ -62,6 +62,8 @@ class Database:
 		if bcrypt.verify(password, result["password"]):
 			return result
 		return None
+
+
 
 	def get_user_by_personal_id(self):
 		self.cur.execute("SELECT * FROM users WHERE personal_id= %s", (personal_id,))
