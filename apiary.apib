@@ -1,80 +1,276 @@
 FORMAT: 1A
 HOST: http://polls.apiblueprint.org/
 
-# Maintenance-Tracker
+# MaintenaceTracker
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+## Project review [/questions]
+This is the maintenance tracker application api version 2 
 
-## Questions Collection [/questions]
+### Project Requirements [GET]
+1. the user should be able to signup and login
+2. the user should make a request
+3. the user should fetch a request or all requests he made
+4. the user should be able to modify rrequests
+5. the user should be able to delete requests made
+6. the admin should be view all requests
+7. the admin should be able to accept, reject or resolve a request
+8. the admin should be able to delete a specific request
 
-### List All Questions [GET]
+##User requests
+
+### SignUp[POST]
+user signs up using their username, email and password
++ Request (application/json)
+
+        {
+            "username": "penny",
+            "email": "penny@gmail.com",
+            "password": "penny254"
+           
+        }
 
 + Response 200 (application/json)
 
         [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+            "message": "user successfully signed up"        ]
 
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
+### Login[POST]
+user logs in using their email and password and a token is generated
 + Request (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "username": "penny",
+            "password": "penny254"
+           
         }
 
 + Response 201 (application/json)
 
     + Headers
 
-            Location: /questions/2
+            Location: user
 
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
+                "message": "You have logged in successfully"
+            }
+            
+### MakeRequest[POST]
+Using the token the user can now make a request
++ Request (application/json)
+
+        {
+            "request": "computer repair",
+            "department": "finance"
+           
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: user
+
+    + Body
+
+            {
+                "message": "request made successfully"
+            }
+
+### ViewARequest[GET]
+Using his token the user can view a specific request using it's id
++ Request (application/json)
+
+        {
+            "request_id": 1
+
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: user
+
+    + Body
+
+            {
+                "request_id": 1,
+                "request": "computer repair",
+                "department": "finance",
+                "status": "Pending",
+                "personal_id":9
+            }
+
+### ViewAllRequests[GET]
+Using the token generated at log in the user can view all the requests he has made
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: user
+
+    + Body
+
+            {
+                "request_id": 1,
+                "request": "computer repair",
+                "department": "finance",
+                "status": "Pending",
+                "personal_id": 
+            }
+### ModifyRequest[PUT]
+Using the token the user can modify his request using the request id to get a specific request
++ Request (application/json)
+
+        {
+            "request_id": ,
+            "request": "paint maintenance"
+
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: user
+
+    + Body
+
+            {
+                "request_id": ,
+                "request": "paint maintenance",
+                "department": "finance",
+                "status": "Pending",
+                "personal_id":9
+            }
+
+### DeleteARequest[DELETE]
+Using a token the user can delete a request if its id exists in the database
++ Request (application/json)
+
+        {
+            "request_id": 1
+
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: user
+
+    + Body
+
+            {
+                "message": "Deleted successfully"
+            }
+            
+##Admin requests
+
+### AdminViewRequest[GET]
+The admin can view all requests received from users
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "request_id": 1,
+                "request": "computer repair",
+                "department": "finance",
+                "status": "Pending",
+                "personal_id": 9
+            }
+            
+### AdminApproveRequest[PUT]
+The admin can modify the request to approve
++ Request (application/json)
+
+        {
+            "request_id": 1
+
+        }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "request_id": 1,
+                "request": "computer repair",
+                "department": "finance",
+                "status": "Approve",
+                "personal_id": 9
+            }
+            
+### AdminDisapproveRequest[PUT]
+The admin can modify the request to disapprove
++ Request (application/json)
+
+        {
+            "request_id": 1
+
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: user
+
+    + Body
+
+            {
+                "request_id": 1,
+                "request": "computer repair",
+                "department": "finance",
+                "status": "Disapprove",
+                "personal_id": 9
+            }
+            
+### AdminResolveRequest[PUT]
+The admin can resolve a particular request
++ Request (application/json)
+
+        {
+            "request_id": 1
+
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: user
+
+    + Body
+
+            {
+                "request_id": 1,
+                "request": "computer repair",
+                "department": "finance",
+                "status": "Resolved",
+                "personal_id":
+            }
+
+### AdminDeleteRequest[DELETE]
+An admin can choose to delete a request given its existence
++ Request (application/json)
+
+        {
+            "request_id": 1
+
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: user
+
+    + Body
+
+            {
+                "message": "Deleted successfully"
             }
