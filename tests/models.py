@@ -17,6 +17,11 @@ def role_admin_required(f):
 		return f(*args, **kwargs)
 	return wrapped
 
+class Get_All_Users(Resource):
+	def get(self):
+		users = helper.get_users()
+		return users
+
 
 class User_SignUp(Resource):
 	def post(self):
