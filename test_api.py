@@ -1,7 +1,5 @@
 import unittest
-import run
 import json
-import models
 from run import create_app
 from helper import helper
 
@@ -37,7 +35,8 @@ class TestModels(unittest.TestCase):
 
     def test_api_signup(self):
         data = self.user
-        res = self.checker.post('/api/v2auth/signup', data=json.dumps(data), headers=self.header)
+        res = self.checker.post('/api/v2/auth/signup', data=json.dumps(data), headers=self.header)+++++
+
         result = json.loads(res.get_data(as_text=True))
 
         self.assertEqual(result['message'], "User successfully signed up")
@@ -163,34 +162,34 @@ class TestModels(unittest.TestCase):
         result = json.loads(res.data.decode())['res']
         self.assertEqual(result['status'], "Disapprove")
 
-    # def test_admin_resolve_request(self):
-    #     res = self.checker.post('/api/v2/users/requests', data=json.dumps(self.request), headers=self.loggedInUserHeaders)
-    #     request_id = json.loads(res.data.decode())['request_id']
+    def test_admin_resolve_request(self):
+        res = self.checker.post('/api/v2/users/requests', data=json.dumps(self.request), headers=self.loggedInUserHeaders)
+        request_id = json.loads(res.data.decode())['request_id']
 
-    #     res = self.checker.get('/api/v2/requests/{}'.format(request_id), headers=self.loggedInAdminHeaders)
-    #     self.assertEqual(res.status_code, 200)
+        res = self.checker.get('/api/v2/requests/{}'.format(request_id), headers=self.loggedInAdminHeaders)
+        self.assertEqual(res.status_code, 200)
 
-    #     rv = self.checker.put('/api/v2/requests/{}/resolve'.format(request_id), headers=self.loggedInAdminHeaders)
-    #     self.assertEqual(rv.status_code, 200)
+        rv = self.checker.put('/api/v2/requests/{}/resolve'.format(request_id), headers=self.loggedInAdminHeaders)
+        self.assertEqual(rv.status_code, 200)
 
-    #     res = self.checker.get('/api/v2/users/requests/{}'.format(request_id), headers=self.loggedInUserHeaders)
-    #     self.assertEqual(res.status_code, 200)
+        res = self.checker.get('/api/v2/users/requests/{}'.format(request_id), headers=self.loggedInUserHeaders)
+        self.assertEqual(res.status_code, 200)
 
-    #     result = json.loads(res.data.decode())['res']
-    #     self.assertEqual(result['status'], "Resolved")
+        result = json.loads(res.data.decode())['res']
+        self.assertEqual(result['status'], "Resolved")
 
-    # def test_admin_delete_request(self):
-    #     res = self.checker.post('/api/v2/users/requests', data=json.dumps(self.request), headers=self.loggedInUserHeaders)
-    #     request_id = json.loads(res.data.decode())['request_id']
+    def test_admin_delete_request(self):
+        res = self.checker.post('/api/v2/users/requests', data=json.dumps(self.request), headers=self.loggedInUserHeaders)
+        request_id = json.loads(res.data.decode())['request_id']
 
-    #     res = self.checker.get('/api/v2/requests/{}'.format(request_id), headers=self.loggedInAdminHeaders)
-    #     self.assertEqual(res.status_code, 200)
+        res = self.checker.get('/api/v2/requests/{}'.format(request_id), headers=self.loggedInAdminHeaders)
+        self.assertEqual(res.status_code, 200)
 
-    #     rv = self.checker.delete('/api/v2/requests/{}/delete'.format(request_id), headers=self.loggedInAdminHeaders)
-    #     self.assertEqual(rv.status_code, 200)
+        rv = self.checker.delete('/api/v2/requests/{}/delete'.format(request_id), headers=self.loggedInAdminHeaders)
+        self.assertEqual(rv.status_code, 200)
 
-    #     res = self.checker.get('/api/v2/users/requests/{}'.format(request_id), headers=self.loggedInUserHeaders)
-    #     self.assertEqual(res.status_code, 404)
+        res = self.checker.get('/api/v2/users/requests/{}'.format(request_id), headers=self.loggedInUserHeaders)
+        self.assertEqual(res.status_code, 404)
 
     def tearDown(self):
         helper.drop_everything()
