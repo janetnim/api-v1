@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_restful import  Api, Resource
-from config import config
 from flask_jwt_extended import JWTManager
 from helper import helper
 
@@ -14,16 +13,16 @@ database = {
 		"DATABASE_HOST": "localhost"
 	},
 	"TESTING": {
-		"DATABASE_NAME": "maintenance",
+		"DATABASE_NAME": "maintenance_test",
 		"DATABASE_PASSWORD": "123456",
 		"DATABASE_USER": "janet",
 		"DATABASE_HOST": "localhost"
 	},
 	"PRODUCTION":{
-		"DATABASE_NAME": "maintenance",
-		"DATABASE_PASSWORD": "123456",
-		"DATABASE_USER": "janet",
-		"DATABASE_HOST": "localhost"
+		"DATABASE_NAME": "ddecsfpmjv8jf",
+		"DATABASE_PASSWORD": "fcfa39797020dcd64b88152cea3be28c4c90cc8e56a4dd9bd851f93d310b2f96",
+		"DATABASE_USER": "ogtczsiotxgjvs",
+		"DATABASE_HOST": "ec2-50-16-241-91.compute-1.amazonaws.com"
 	},
 }
 

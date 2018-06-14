@@ -1,5 +1,6 @@
 {
   "test_admin.py::TestModels": true, 
+  "test_api.py": true, 
   "test_api.py::TestApis": true, 
   "test_api.py::TestModels": true, 
   "test_user.py::TestModels": true, 
