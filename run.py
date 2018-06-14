@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restful import  Api, Resource
 from flask_jwt_extended import JWTManager
 from helper import helper
+from flask_cors import CORS
 
 import models
 
@@ -13,6 +14,8 @@ database = {
 
 def create_app(environment = "DEVELOPMENT"):
 	app = Flask(__name__)
+	app = Flask(__name__, instance_relative_config=True)
+	CORS(app)
 	api = Api(app)
 	
 	app.config['DATABASE_NAME'] = database[environment]
