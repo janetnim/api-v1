@@ -24,8 +24,7 @@ database = {
 		"DATABASE_HOST": "ec2-50-16-241-91.compute-1.amazonaws.com"
 	},
 }
-
-
+ 
 def create_app(environment = "DEVELOPMENT"):
 	app = Flask(__name__)
 	api = Api(app)
@@ -58,7 +57,7 @@ def create_app(environment = "DEVELOPMENT"):
 	
 	return app
 
-app = create_app()
+app = create_app("PRODUCTION")
 
 if __name__ == '__main__':
 	app.run(debug=True)
