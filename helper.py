@@ -11,7 +11,11 @@ class Database:
 
 	def initialize(self,app):
 		database_name = app.config['DATABASE_NAME']
-		self.conn = psycopg2.connect("dbname={} user='janet' host='localhost' password='123456'". format(database_name))
+		self.conn = psycopg2.connect("dbname='{}' user='{}' host='{}' password='{}'".format(
+			app.config['DATABASE_NAME'],
+			app.config['DATABASE_USER'],
+			app.config['DATABASE_HOST'],
+			app.config['DATABASE_PASSWORD']))
 		self.cur = self.conn.cursor(cursor_factory = RealDictCursor)
 
 		self.cur.execute("CREATE TABLE IF NOT EXISTS users (personal_id serial PRIMARY KEY, username varchar  NOT NULL, email varchar  NOT NULL, password varchar  NOT NULL, role varchar)")

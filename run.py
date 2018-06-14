@@ -1,24 +1,41 @@
 from flask import Flask, request, jsonify
 from flask_restful import  Api, Resource
+from config import config
 from flask_jwt_extended import JWTManager
 from helper import helper
-from flask_cors import CORS
 
-from views import models
+import models
 
 database = {
-	"DEVELOPMENT": "maintenance",
-	"TESTING": "maintenance_test"
+	"DEVELOPMENT": {
+		"DATABASE_NAME": "maintenance",
+		"DATABASE_PASSWORD": "123456",
+		"DATABASE_USER": "janet",
+		"DATABASE_HOST": "localhost"
+	},
+	"TESTING": {
+		"DATABASE_NAME": "maintenance",
+		"DATABASE_PASSWORD": "123456",
+		"DATABASE_USER": "janet",
+		"DATABASE_HOST": "localhost"
+	},
+	"PRODUCTION":{
+		"DATABASE_NAME": "maintenance",
+		"DATABASE_PASSWORD": "123456",
+		"DATABASE_USER": "janet",
+		"DATABASE_HOST": "localhost"
+	},
 }
 
 
 def create_app(environment = "DEVELOPMENT"):
 	app = Flask(__name__)
-	app = Flask(__name__, instance_relative_config=True)
-	CORS(app)
 	api = Api(app)
 	
-	app.config['DATABASE_NAME'] = database[environment]
+	app.config['DATABASE_NAME'] = database[environment]['DATABASE_NAME']
+	app.config['DATABASE_PASSWORD'] = database[environment]['DATABASE_PASSWORD']
+	app.config['DATABASE_USER'] = database[environment]['DATABASE_USER']
+	app.config['DATABASE_HOST'] = databasee[environment]['DATABASE_HOST']
 
 	helper.initialize(app)
 
@@ -29,7 +46,6 @@ def create_app(environment = "DEVELOPMENT"):
 
 	api.add_resource(models.User_SignUp, '/api/v2/auth/signup', methods=['POST'])
 	api.add_resource(models.User_login, '/api/v2/auth/login', methods=['POST'])
-	api.add_resource(models.Get_All_Users, '/api/v2/users', methods=['GET'])
 	api.add_resource(models.MakeRequest, '/api/v2/users/requests', methods=['POST'])
 	api.add_resource(models.ViewAllRequest, '/api/v2/users/requests', methods=['GET'])
 	api.add_resource(models.RequestView, '/api/v2/users/requests/<int:request_id>', methods=['GET'])
