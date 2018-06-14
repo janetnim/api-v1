@@ -10,6 +10,7 @@ install:
   - pip install -r requirements.txt
 
 before_script:
+  - psql -c 'create database maintenance;' -U postgres
   - psql -c 'create database maintenance_test;' -U postgres
   - psql -c "create user janet with password '123456'; " -U postgres
 
