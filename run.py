@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 from helper import helper
 from flask_cors import CORS
 
-import models
+from views import models
 
 database = {
 	"DEVELOPMENT": "maintenance",
