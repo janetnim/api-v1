@@ -17,6 +17,7 @@ Flask-Cors==3.0.6
 Flask-JWT-Extended==3.10.0
 Flask-RESTful==0.3.6
 funcsigs==1.0.2
+gunicorn==19.8.1
 idna==2.7
 ipaddress==1.0.22
 itsdangerous==0.24
