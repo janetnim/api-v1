@@ -3,6 +3,7 @@ from flask_restful import  Api, Resource
 from flask_jwt_extended import JWTManager
 from helper import helper
 from views import models
+from flask_cors import CORS
 
 database = {
 	"DEVELOPMENT": {
@@ -27,6 +28,8 @@ database = {
  
 def create_app(environment = "DEVELOPMENT"):
 	app = Flask(__name__)
+	app = Flask(__name__, instance_relative_config=True)
+	CORS(app)
 	api = Api(app)
 	
 	app.config['DATABASE_NAME'] = database[environment]['DATABASE_NAME']
