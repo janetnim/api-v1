@@ -2,8 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restful import  Api, Resource
 from flask_jwt_extended import JWTManager
 from helper import helper
-
-import models
+from views import models
 
 database = {
 	"DEVELOPMENT": {
@@ -34,7 +33,7 @@ def create_app(environment = "DEVELOPMENT"):
 	app.config['DATABASE_NAME'] = database[environment]['DATABASE_NAME']
 	app.config['DATABASE_PASSWORD'] = database[environment]['DATABASE_PASSWORD']
 	app.config['DATABASE_USER'] = database[environment]['DATABASE_USER']
-	app.config['DATABASE_HOST'] = databasee[environment]['DATABASE_HOST']
+	app.config['DATABASE_HOST'] = database[environment]['DATABASE_HOST']
 
 	helper.initialize(app)
 
