@@ -27,7 +27,6 @@ database = {
 }
  
 def create_app(environment = "DEVELOPMENT"):
-	app = Flask(__name__)
 	app = Flask(__name__, instance_relative_config=True)
 	CORS(app)
 	api = Api(app)
