@@ -22,7 +22,6 @@ class Get_All_Users(Resource):
 		users = helper.get_users()
 		return users
 
-
 class User_SignUp(Resource):
 	def post(self):
 
@@ -37,9 +36,9 @@ class User_SignUp(Resource):
 		password = args['password']
 
 		if username == "" or email == "" or password == "":
-			return "Please enter all details"
+			return {"message": "Please enter all details"}
 		elif username == " " or email == " " or password == " ":
-			return "Invalid entry try again"
+			return {"message": "Invalid entry try again"}
 		elif re.match(r'^.+@([?)[a-zA-Z0-9-.])+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$' , email) is None:
 			return {"message": "invalid email"}, 400
 		elif re.match(r'^[0-9]+$', username) is not None:
@@ -165,7 +164,7 @@ class ViewAllRequest(Resource):
 		user = User_login().get_one_user(get_jwt_identity())
 		res = helper.user_get_all(user['personal_id'])
 		if res is None or len(res) == 0:
-			return "No requests available"
+			return {"message": "No requests available"}
 		return {"res":res}
 
 	'''Admin endpoints'''
@@ -175,7 +174,7 @@ class AdminGetRequest(Resource):
 	def get(self):
 		res = helper.admin_get_all_requests()
 		if res is None or len(res) == 0:
-			return "No requests available"
+			return {"message": "No requests available"}
 		return {"res":res}
 
 
@@ -226,7 +225,7 @@ class AdminDeleteRequest(Resource):
 	def delete(self, request_id):
 		res = helper.get_request_by_id(request_id)
 		if res is None or len(res) == 0:
-			return "Request does not exist!"
+			return {"message": "Request does not exist!"}
 		helper.delete_request_by_id(request_id)
 		helper.admin_get_all_requests()
 		return {"message":"Deleted successfully"}, 200
