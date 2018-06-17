@@ -24,7 +24,6 @@ class Get_All_Users(Resource):
 
 class User_SignUp(Resource):
 	def post(self):
-
 		parser = reqparse.RequestParser()
 		parser.add_argument('username', type=str, help='invalid username')
 		parser.add_argument('email', type=str, help='Please enter email')
@@ -69,7 +68,6 @@ class User_login(Resource):
 
 		hash = bcrypt.encrypt(password)
 
-		# helper.get_user_by_username_and_password(username, password)
 		user = User_login().get_one_user(username)
 		if user is None or len(user)==0:
 			return {"message":"user not found"}, 404
@@ -197,7 +195,6 @@ class AdminGetOneRequest(Resource):
 			return {"message":"Request does not exist"}
 		return {"Request":res}
 
-
 class DisapproveRequest(Resource):
 	@jwt_required
 	@role_admin_required
@@ -207,7 +204,6 @@ class DisapproveRequest(Resource):
 			return {"message":"Request does not exist"}
 		helper.disapprove_request_by_id(request_id)
 		return {"Request":res}
-
 
 class AdminResolveRequest(Resource):
 	@jwt_required
