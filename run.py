@@ -42,7 +42,6 @@ def create_app(environment = "DEVELOPMENT"):
 
 	jwt = JWTManager(app)
 
-
 	api.add_resource(models.User_SignUp, '/api/v2/auth/signup', methods=['POST'])
 	api.add_resource(models.User_login, '/api/v2/auth/login', methods=['POST'])
 	api.add_resource(models.MakeRequest, '/api/v2/users/requests', methods=['POST'])
