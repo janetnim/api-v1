@@ -83,9 +83,10 @@ class User_login(Resource):
 			return {"message":"Enter all details"}
 		if len(username.split()) == 0 or len(password.split())==0:
 			return {"message": "Invalid entry try again"}
+		#role = get_role(username)
 
 		token = create_access_token(identity=username)
-		return {"message": "You have logged in successfully", "token":token, "role":role}
+		return {"message": "You have logged in successfully", "token":token}
 
 
 class MakeRequest(Resource):
