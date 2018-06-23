@@ -73,6 +73,11 @@ class Database:
 		res = self.cur.fetchall()
 		return res
 
+	def get_role(self, username):
+		self.cur.execute("SELECT role FROM users WHERE username = %s", (username,))
+		result = self.cur.fetchone()
+		return result
+
 	def get_user_by_personal_id(self):
 		self.cur.execute("SELECT * FROM users WHERE personal_id= %s", (personal_id,))
 		return self.cur.fetchone()
