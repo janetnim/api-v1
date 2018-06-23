@@ -174,7 +174,7 @@ class AdminGetRequest(Resource):
 		res = helper.admin_get_all_requests()
 		if res is None or len(res) == 0:
 			return {"message": "No requests available"}
-		return {"res":res}
+		return {"Request":res}
 
 
 class ApproveRequest(Resource):
