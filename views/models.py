@@ -86,7 +86,7 @@ class User_login(Resource):
 		#role = get_role(username)
 
 		token = create_access_token(identity=username)
-		return {"message": "You have loggeeeeeeeeeeed in successfully", "token":token}
+		return {"message": "You have loggeeeeeeedddeeeed in successfully", "token":token}
 
 
 class MakeRequest(Resource):
