@@ -49,6 +49,7 @@ def create_app(environment = "DEVELOPMENT"):
 	api.add_resource(models.RequestView, '/api/v2/users/requests/<int:request_id>', methods=['GET'])
 	api.add_resource(models.ModifyRequest, '/api/v2/users/requests/<int:request_id>', methods=['PUT'])
 	api.add_resource(models.DeleteRequest, '/api/v2/users/requests/<int:request_id>', methods=['DELETE'])
+	api.add_resource(models.Get_All_Users, '/api/v2/users', methods=['GET'])
 	api.add_resource(models.AdminGetRequest, '/api/v2/requests', methods=['GET'])
 	api.add_resource(models.AdminGetOneRequest,"/api/v2/requests/<int:request_id>", methods=['GET'])
 	api.add_resource(models.ApproveRequest, '/api/v2/requests/<int:request_id>/approve', methods=['PUT'])
