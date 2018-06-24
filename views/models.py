@@ -18,9 +18,11 @@ def role_admin_required(f):
 	return wrapped
 
 class Get_All_Users(Resource):
+	@jwt_required
+	@role_admin_required
 	def get(self):
 		users = helper.get_users()
-		return users
+		return {"users": users}
 
 class User_SignUp(Resource):
 	def post(self):
