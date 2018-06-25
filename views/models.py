@@ -18,11 +18,9 @@ def role_admin_required(f):
 	return wrapped
 
 class Get_All_Users(Resource):
-	@jwt_required
-	@role_admin_required
 	def get(self):
 		users = helper.get_users()
-		return {"users": users}
+		return users
 
 class User_SignUp(Resource):
 	def post(self):
@@ -178,6 +176,32 @@ class AdminGetRequest(Resource):
 			return {"message": "No requests available"}
 		return {"Request":res}
 
+class AdminApproveRequest(Resource):
+	@jwt_required
+	@role_admin_required
+	def get(self):
+		res = helper.admin_get_approved_requests()
+		if res is None or len(res) == 0:
+			return {"message": "No requests available"}
+		return {"Request":res}
+
+class AdminRejectRequest(Resource):
+	@jwt_required
+	@role_admin_required
+	def get(self):
+		res = helper.admin_get_rejected_requests()
+		if res is None or len(res) == 0:
+			return {"message": "No requests available"}
+		return {"Request":res}
+
+class AdminResolveRequests(Resource):
+	@jwt_required
+	@role_admin_required
+	def get(self):
+		res = helper.admin_get_resolved_requests()
+		if res is None or len(res) == 0:
+			return {"message": "No requests available"}
+		return {"Request":res}
 
 class ApproveRequest(Resource):
 	@jwt_required
