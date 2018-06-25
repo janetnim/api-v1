@@ -129,6 +129,21 @@ class Database:
 		req = self.cur.fetchall()
 		return req
 
+	def admin_get_approved_requests(self):
+		self.cur.execute("SELECT * FROM requests WHERE status='Approve'")
+		req = self.cur.fetchall()
+		return req
+
+	def admin_get_rejected_requests(self):
+		self.cur.execute("SELECT * FROM requests WHERE status='Disapprove'")
+		req = self.cur.fetchall()
+		return req
+
+	def admin_get_resolved_requests(self):
+		self.cur.execute("SELECT * FROM requests WHERE status='Resolve'")
+		req = self.cur.fetchall()
+		return req
+
 	def insert_user_request(self,request, department, personal_id):
 		self.cur.execute("INSERT INTO requests (request, department, status, personal_id) VALUES(%s,%s,'Pending', %s) RETURNING request_id",(request, department,personal_id))
 		result = self.cur.fetchone()
