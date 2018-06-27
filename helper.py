@@ -21,7 +21,6 @@ class Database:
 		self.cur.execute("CREATE TABLE IF NOT EXISTS users (personal_id serial PRIMARY KEY, username varchar  NOT NULL, email varchar  NOT NULL, password varchar  NOT NULL, role varchar)")
 		self.cur.execute("CREATE TABLE IF NOT EXISTS requests (request_id serial PRIMARY KEY, request varchar, "\
 			"department varchar, status varchar, personal_id integer REFERENCES users (personal_id) ON DELETE CASCADE)")
-		
 		self.cur.execute("SELECT * FROM users WHERE username = 'admin'")
 		result = self.cur.fetchone()
 		if result is None:
@@ -140,7 +139,7 @@ class Database:
 		return req
 
 	def admin_get_resolved_requests(self):
-		self.cur.execute("SELECT * FROM requests WHERE status='Resolve'")
+		self.cur.execute("SELECT * FROM requests WHERE status='Resolved'")
 		req = self.cur.fetchall()
 		return req
 
