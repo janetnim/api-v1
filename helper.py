@@ -44,6 +44,10 @@ class Database:
 		self.conn.commit()
 		return result
 
+	def get_user(self, username):
+		self.cur.execute("SELECT username FROM users WHERE username=%s",(username,))
+		return self.cur.fetchone()
+
 	def get_users_by_username(self):
 		self.cur.execute("SELECT username FROM users")
 		res = self.cur.fetchall()
