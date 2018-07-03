@@ -67,6 +67,11 @@ class Database:
 			return result
 		return None
 
+	def get_user_username(self, username):
+		self.cur.execute("SELECT username from users WHERE username= %s", (username,))
+		res = self.cur.fetchone()
+		return res
+
 	def get_users(self):
 		self.cur.execute("SELECT * FROM users WHERE username!='admin'")
 		res = self.cur.fetchall()

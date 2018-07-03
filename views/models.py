@@ -85,7 +85,8 @@ class User_login(Resource):
 			return {"message": "Invalid entry try again"}
 		role = helper.get_role(username)
 		token = create_access_token(identity=username)
-		return {"message": "You have logged in successfully", "token":token, "role":role}
+		username = helper.get_user_username(username)
+		return {"message": "You have logged in successfully", "token":token, "role":role, "username":username}
 
 
 class MakeRequest(Resource):
