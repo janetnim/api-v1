@@ -64,4 +64,4 @@ pip install postgresql
 [Medium post](https://medium.com/@janetnim401/boot-camp-week-1-bf4f288da644)
 [Pivotal tracker stories](https://www.pivotaltracker.com/n/projects/2173438)
 [Pull request](https://github.com/janetnim/api-v1/pull/2)
-(https://github.com/janetnim/api-v1/compare/develop2...ft-api-v2-test?expand=1)
+[Github Branch](https://github.com/janetnim/api-v1/compare/develop2...ft-api-v2-test?expand=1)
